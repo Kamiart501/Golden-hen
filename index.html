@@ -1,0 +1,3583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Golden Hen</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  background:#101010;
+  color:#fff;
+  min-height:100vh;
+}
+
+button,input,select{
+  font-family:Arial,sans-serif;
+}
+
+.screen{
+  min-height:100vh;
+}
+
+.login-screen{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+
+  background:
+  linear-gradient(
+    rgba(0,0,0,.68),
+    rgba(0,0,0,.82)
+  ),
+  url("https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?auto=format&fit=crop&w=1200&q=80");
+
+  background-size:cover;
+  background-position:center;
+}
+
+.login-box{
+  width:100%;
+  max-width:420px;
+  padding:30px 22px;
+  border-radius:22px;
+  background:rgba(20,20,20,.95);
+  border:1px solid #d6a72c;
+  box-shadow:0 0 30px rgba(255,193,7,.20);
+  text-align:center;
+}
+
+.logo{
+  font-size:60px;
+  margin-bottom:5px;
+}
+
+.login-title{
+  font-size:30px;
+  font-weight:bold;
+  color:#ffd54a;
+}
+
+.subtitle{
+  color:#999;
+  margin:8px 0 25px;
+}
+
+.input,
+.select{
+  width:100%;
+  padding:14px;
+  margin:8px 0;
+  border-radius:12px;
+  border:1px solid #444;
+  outline:none;
+  background:#252525;
+  color:#fff;
+}
+
+.input:focus,
+.select:focus{
+  border-color:#ffd54a;
+}
+
+.btn{
+  width:100%;
+  padding:14px;
+  margin-top:10px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,#ffd54a,#d99b00);
+  color:#111;
+  font-weight:bold;
+  font-size:15px;
+  cursor:pointer;
+}
+
+.btn:active{
+  transform:scale(.98);
+}
+
+.btn.secondary{
+  background:#292929;
+  color:#fff;
+  border:1px solid #555;
+}
+
+.btn.logout{
+  background:#b52b2b;
+  color:#fff;
+}
+
+.heading{
+  color:#ffd54a;
+  font-size:25px;
+  font-weight:bold;
+  margin-bottom:16px;
+}
+
+#app{
+  min-height:100vh;
+  padding-bottom:82px;
+}
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:10;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 17px;
+  background:#181818;
+  border-bottom:1px solid #333;
+}
+
+.brand{
+  color:#ffd54a;
+  font-size:20px;
+  font-weight:bold;
+}
+
+.top-user{
+  color:#999;
+  font-size:12px;
+  max-width:170px;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+
+.page{
+  display:none;
+  max-width:700px;
+  margin:auto;
+  padding:18px;
+}
+
+.page.active{
+  display:block;
+}
+
+.card{
+  background:#1c1c1c;
+  border:1px solid #333;
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:15px;
+}
+
+.balance-card{
+  background:linear-gradient(135deg,#302406,#1b1b1b);
+  border:1px solid #a98216;
+}
+
+.balance-label{
+  color:#999;
+  font-size:13px;
+}
+
+.balance{
+  color:#ffd54a;
+  font-size:36px;
+  font-weight:bold;
+  margin-top:7px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.stat{
+  background:#202020;
+  border:1px solid #333;
+  border-radius:14px;
+  padding:15px 8px;
+  text-align:center;
+}
+
+.stat-value{
+  color:#ffd54a;
+  font-size:23px;
+  font-weight:bold;
+}
+
+.stat-label{
+  color:#999;
+  font-size:11px;
+  margin-top:5px;
+}
+
+.shop{
+  margin-top:15px;
+  padding:22px;
+  border-radius:18px;
+  border:1px solid #d6a72c;
+  background:
+  linear-gradient(
+    rgba(0,0,0,.4),
+    rgba(0,0,0,.72)
+  ),
+  url("https://images.unsplash.com/photo-1553267751-1c148a7280a1?auto=format&fit=crop&w=1000&q=80");
+  background-size:cover;
+  background-position:center;
+}
+
+.vip{
+  display:inline-block;
+  background:#ffd54a;
+  color:#111;
+  padding:5px 10px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+.shop h2{
+  margin-bottom:8px;
+}
+
+.price{
+  color:#ffd54a;
+  font-size:30px;
+  font-weight:bold;
+  margin:12px 0;
+}
+
+.muted{
+  color:#999;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.progress-box{
+  height:18px;
+  margin:15px 0;
+  background:#292929;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.progress-bar{
+  width:0%;
+  height:100%;
+  background:linear-gradient(90deg,#d99b00,#ffe06a);
+  transition:.4s;
+}
+
+.timer{
+  color:#ffd54a;
+  text-align:center;
+  font-weight:bold;
+  margin:10px 0;
+}
+
+.rate-table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:12px;
+}
+
+.rate-table th,
+.rate-table td{
+  padding:10px 5px;
+  text-align:left;
+  border-bottom:1px solid #333;
+  font-size:13px;
+}
+
+.rate-table th{
+  color:#ffd54a;
+}
+
+.big-number{
+  color:#ffd54a;
+  font-size:38px;
+  font-weight:bold;
+  margin:10px 0;
+}
+
+.payment-number{
+  padding:15px;
+  margin:10px 0;
+  border-radius:12px;
+  background:#302506;
+  border:1px solid #b88d18;
+  color:#ffd54a;
+  text-align:center;
+  font-size:20px;
+  font-weight:bold;
+  letter-spacing:1px;
+}
+
+.notice{
+  padding:12px;
+  margin:10px 0;
+  border-left:4px solid #ffd54a;
+  border-radius:8px;
+  background:#252525;
+  color:#bbb;
+  font-size:12px;
+  line-height:1.5;
+}
+
+.deposit-status{
+  padding:13px;
+  margin-top:10px;
+  border-radius:12px;
+  background:#232323;
+  border:1px solid #3b3b3b;
+  font-size:13px;
+  line-height:1.7;
+}
+
+.status-pending{
+  color:#ffd54a;
+}
+
+.status-approved,
+.status-paid{
+  color:#4ade80;
+}
+
+.status-rejected{
+  color:#ff6666;
+}
+
+.profile-avatar{
+  width:75px;
+  height:75px;
+  margin:auto;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  border-radius:50%;
+  background:#302506;
+  border:2px solid #d6a72c;
+  font-size:38px;
+}
+
+.profile-name{
+  color:#ffd54a;
+  text-align:center;
+  font-size:22px;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+.profile-email{
+  color:#999;
+  text-align:center;
+  font-size:13px;
+  margin-top:5px;
+  word-break:break-all;
+}
+
+.setting-row{
+  padding:15px 0;
+  border-bottom:1px solid #333;
+}
+
+.setting-title{
+  color:#fff;
+  font-weight:bold;
+}
+
+.setting-value{
+  color:#999;
+  font-size:13px;
+  margin-top:5px;
+  word-break:break-all;
+}
+
+.empty{
+  color:#888;
+  text-align:center;
+  padding:25px 5px;
+}
+
+.bottom-nav{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:20;
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  padding:7px 3px;
+  background:#181818;
+  border-top:1px solid #333;
+}
+
+.nav-btn{
+  padding:6px 2px;
+  border:none;
+  background:none;
+  color:#888;
+  font-size:10px;
+  cursor:pointer;
+}
+
+.nav-btn span{
+  display:block;
+  font-size:20px;
+  margin-bottom:3px;
+}
+
+.nav-btn.active{
+  color:#ffd54a;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:92px;
+  transform:translateX(-50%);
+  z-index:100;
+  display:none;
+  max-width:90%;
+  padding:12px 18px;
+  border-radius:25px;
+  background:#f5c842;
+  color:#111;
+  text-align:center;
+  font-size:13px;
+  font-weight:bold;
+}
+
+@media(max-width:420px){
+
+  .stats{
+    gap:6px;
+  }
+
+  .stat{
+    padding:12px 4px;
+  }
+
+  .stat-value{
+    font-size:20px;
+  }
+
+}
+
+</style>
+
+
+<script type="module">
+
+/* =========================
+   FIREBASE IMPORTS
+========================= */
+
+import {
+  initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updatePassword,
+  onAuthStateChanged,
+  signOut
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  serverTimestamp,
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+/* =========================
+   FIREBASE CONFIG
+========================= */
+
+const firebaseConfig = {
+
+  apiKey:
+  "AIzaSyD-uhTjZklnHdeOXMyR_gRiAWXyqIwAuFk",
+
+  authDomain:
+  "earn-app-8f00d.firebaseapp.com",
+
+  projectId:
+  "earn-app-8f00d",
+
+  storageBucket:
+  "earn-app-8f00d.firebasestorage.app",
+
+  messagingSenderId:
+  "864949482951",
+
+  appId:
+  "1:864949482951:web:1ce6dd7fe2b911ecea55e2",
+
+  measurementId:
+  "G-MBV2HQ0H49"
+
+};
+
+
+/* =========================
+   START FIREBASE
+========================= */
+
+const firebaseApp =
+initializeApp(firebaseConfig);
+
+const auth =
+getAuth(firebaseApp);
+
+const db =
+getFirestore(firebaseApp);
+
+
+/* =========================
+   PAYMENT NUMBERS
+========================= */
+
+const JAZZCASH_NUMBER =
+"03482179022";
+
+const EASYPAISA_NUMBER =
+"YOUR EASYPAISA BUSINESS NUMBER";
+
+
+/* =========================
+   APP DATA
+========================= */
+
+let data = {
+
+  email:"",
+
+  balance:0,
+
+  hens:0,
+
+  eggs:0,
+
+  totalEarned:0,
+
+  referrals:0,
+
+  lastEggTime:0,
+
+  history:[]
+
+};
+
+
+/* =========================
+   ELEMENT
+========================= */
+
+function el(id){
+
+  return document.getElementById(id);
+
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+function toast(message){
+
+  const box =
+  el("toast");
+
+  if(!box)return;
+
+  box.innerText =
+  message;
+
+  box.style.display =
+  "block";
+
+  setTimeout(()=>{
+
+    box.style.display =
+    "none";
+
+  },3000);
+
+}
+
+window.toast =
+toast;
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(value){
+
+  return String(value)
+
+  .replace(/&/g,"&amp;")
+
+  .replace(/</g,"&lt;")
+
+  .replace(/>/g,"&gt;")
+
+  .replace(/"/g,"&quot;")
+
+  .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================
+   LOAD USER DATA
+========================= */
+
+async function loadData(){
+
+  const user =
+  auth.currentUser;
+
+  if(!user)return;
+
+
+  try{
+
+    const userRef =
+    doc(
+      db,
+      "user",
+      user.uid
+    );
+
+
+    const snap =
+    await getDoc(userRef);
+
+
+    if(snap.exists()){
+
+      const d =
+      snap.data();
+
+
+      data = {
+
+        email:
+        user.email ||
+        d.Email ||
+        "",
+
+        balance:
+        Number(d.Coin || 0),
+
+        hens:
+        Number(d.hens || 0),
+
+        eggs:
+        Number(d.eggs || 0),
+
+        totalEarned:
+        Number(
+          d["Total earning"] || 0
+        ),
+
+        referrals:
+        Number(
+          d.referrals || 0
+        ),
+
+        lastEggTime:
+        Number(
+          d.lastEggTime || 0
+        ),
+
+        history:
+        Array.isArray(d.history)
+        ? d.history
+        : []
+
+      };
+
+    }else{
+
+      data.email =
+      user.email || "";
+
+      await saveData();
+
+    }
+
+
+    updateUI();
+
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Firebase data error"
+    );
+
+  }
+
+}
+
+
+/* =========================
+   SAVE USER DATA
+========================= */
+
+async function saveData(){
+
+  const user =
+  auth.currentUser;
+
+  if(!user)return;
+
+
+  try{
+
+    await setDoc(
+
+      doc(
+        db,
+        "user",
+        user.uid
+      ),
+
+      {
+
+        Coin:
+        Number(data.balance || 0),
+
+        CreatedAt:
+        serverTimestamp(),
+
+        Email:
+        user.email ||
+        data.email ||
+        "",
+
+        Name:
+        "Golden Hen Member",
+
+        "Total earning":
+        Number(
+          data.totalEarned || 0
+        ),
+
+        "Withdraw status":
+        "Pending",
+
+        Num:
+        "",
+
+        hens:
+        Number(data.hens || 0),
+
+        eggs:
+        Number(data.eggs || 0),
+
+        referrals:
+        Number(data.referrals || 0),
+
+        lastEggTime:
+        Number(data.lastEggTime || 0),
+
+        history:
+        data.history || []
+
+      },
+
+      {
+        merge:true
+      }
+
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Firebase save error: "+
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================
+   UPDATE UI
+========================= */
+
+function updateUI(){
+
+  if(!data)return;
+
+
+  if(el("balance"))
+    el("balance").innerText =
+    "Rs. "+
+    Number(data.balance || 0);
+
+
+  if(el("walletBalance"))
+    el("walletBalance").innerText =
+    "Rs. "+
+    Number(data.balance || 0);
+
+
+  if(el("withdrawAvailableBalance"))
+    el("withdrawAvailableBalance").innerText =
+    "Rs. "+
+    Number(data.balance || 0);
+
+
+  if(el("hens"))
+    el("hens").innerText =
+    Number(data.hens || 0);
+
+
+  if(el("hens2"))
+    el("hens2").innerText =
+    Number(data.hens || 0);
+
+
+  if(el("eggs"))
+    el("eggs").innerText =
+    Number(data.eggs || 0);
+
+
+  if(el("referrals"))
+    el("referrals").innerText =
+    Number(data.referrals || 0);
+
+
+  if(el("eggInventory"))
+    el("eggInventory").innerText =
+    Number(data.eggs || 0);
+
+
+  if(el("totalEarned"))
+    el("totalEarned").innerText =
+    "Rs. "+
+    Number(data.totalEarned || 0);
+
+
+  if(el("profileEmail"))
+    el("profileEmail").innerText =
+    data.email || "Guest";
+
+
+  if(el("settingsEmail"))
+    el("settingsEmail").innerText =
+    data.email || "Guest";
+
+
+  if(el("userEmail"))
+    el("userEmail").innerText =
+    data.email || "Guest";
+
+
+  updateEggValue();
+
+  updateProduction();
+
+}
+
+
+/* =========================
+   EGG RATE
+========================= */
+
+function getEggRate(){
+
+  const eggs =
+  Number(data.eggs || 0);
+
+
+  if(eggs >= 30)
+    return 50;
+
+
+  if(eggs >= 20)
+    return 45;
+
+
+  if(eggs >= 10)
+    return 40;
+
+
+  return 35;
+
+}
+
+
+/* =========================
+   EGG VALUE
+========================= */
+
+function updateEggValue(){
+
+  const eggs =
+  Number(data.eggs || 0);
+
+  const rate =
+  getEggRate();
+
+  const value =
+  eggs * rate;
+
+
+  if(el("eggValue"))
+    el("eggValue").innerText =
+    "Rs. "+value;
+
+}
+
+
+/* =========================
+   PAGE NAVIGATION
+========================= */
+
+function showPage(page){
+
+  document
+  .querySelectorAll(".page")
+  .forEach(p=>{
+
+    p.classList.remove(
+      "active"
+    );
+
+  });
+
+
+  const target =
+  el(page);
+
+
+  if(target){
+
+    target.classList.add(
+      "active"
+    );
+
+  }
+
+
+  document
+  .querySelectorAll(".nav-btn")
+  .forEach(btn=>{
+
+    btn.classList.remove(
+      "active"
+    );
+
+  });
+
+
+  const nav =
+  document.querySelector(
+    '[data-page="'+page+'"]'
+  );
+
+
+  if(nav){
+
+    nav.classList.add(
+      "active"
+    );
+
+  }
+
+
+  if(page === "deposit"){
+
+    loadDepositHistory();
+
+  }
+
+
+  if(page === "withdraw"){
+
+    updateUI();
+
+    loadWithdrawalHistory();
+
+  }
+
+}
+
+window.showPage =
+showPage;
+
+
+/* =========================
+   SIGN UP
+========================= */
+
+async function signup(){
+
+  const email =
+  el("email").value.trim();
+
+  const password =
+  el("password").value;
+
+
+  if(!email){
+
+    toast(
+      "Enter your email"
+    );
+
+    return;
+  }
+
+
+  if(password.length < 6){
+
+    toast(
+      "Password must be at least 6 characters"
+    );
+
+    return;
+  }
+
+
+  try{
+
+    const result =
+    await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+
+    data = {
+
+      email:
+      result.user.email || email,
+
+      balance:0,
+
+      hens:0,
+
+      eggs:0,
+
+      totalEarned:0,
+
+      referrals:0,
+
+      lastEggTime:0,
+
+      history:[]
+
+    };
+
+
+    await saveData();
+
+
+    toast(
+      "Account created successfully"
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      error.message
+    );
+
+  }
+
+}
+
+window.signup =
+signup;
+
+
+/* =========================
+   LOGIN
+========================= */
+
+async function login(){
+
+  const email =
+  el("email").value.trim();
+
+  const password =
+  el("password").value;
+
+
+  if(!email || !password){
+
+    toast(
+      "Enter email and password"
+    );
+
+    return;
+  }
+
+
+  try{
+
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+
+    toast(
+      "Login successful"
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      error.message
+    );
+
+  }
+
+}
+
+window.login =
+login;
+
+
+/* =========================
+   BUY HEN
+========================= */
+
+async function buyHen(){
+
+  const price =
+  600;
+
+
+  if(
+    Number(data.balance || 0)
+    < price
+  ){
+
+    toast(
+      "You need Rs. 600 balance to buy a Golden Hen"
+    );
+
+    return;
+  }
+
+
+  data.balance -=
+  price;
+
+
+  data.hens +=
+  1;
+
+
+  if(!data.lastEggTime){
+
+    data.lastEggTime =
+    Date.now();
+
+  }
+
+
+  data.history.push({
+
+    type:
+    "Hen Purchase",
+
+    amount:
+    price,
+
+    time:
+    Date.now()
+
+  });
+
+
+  await saveData();
+
+  updateUI();
+
+
+  toast(
+    "Golden Hen purchased successfully"
+  );
+
+}
+
+window.buyHen =
+buyHen;
+
+
+/* =========================
+   PRODUCTION
+========================= */
+
+function updateProduction(){
+
+  const hens =
+  Number(data.hens || 0);
+
+  const bar =
+  el("progressBar");
+
+  const timer =
+  el("timer");
+
+
+  if(!hens){
+
+    if(bar)
+      bar.style.width =
+      "0%";
+
+
+    if(timer)
+      timer.innerText =
+      "No active hens";
+
+
+    return;
+  }
+
+
+  if(!data.lastEggTime){
+
+    data.lastEggTime =
+    Date.now();
+
+  }
+
+
+  const now =
+  Date.now();
+
+
+  const oneDay =
+  24 * 60 * 60 * 1000;
+
+
+  const elapsed =
+  now -
+  Number(data.lastEggTime);
+
+
+  let progress =
+  (elapsed / oneDay) * 100;
+
+
+  if(progress > 100)
+    progress = 100;
+
+
+  if(progress < 0)
+    progress = 0;
+
+
+  if(bar)
+    bar.style.width =
+    progress+"%";
+
+
+  if(elapsed >= oneDay){
+
+    if(timer)
+      timer.innerText =
+      "Eggs are ready to collect";
+
+  }else{
+
+    const remaining =
+    oneDay - elapsed;
+
+
+    const hours =
+    Math.floor(
+      remaining /
+      (60*60*1000)
+    );
+
+
+    const minutes =
+    Math.floor(
+      (remaining %
+      (60*60*1000)) /
+      (60*1000)
+    );
+
+
+    const seconds =
+    Math.floor(
+      (remaining %
+      (60*1000)) /
+      1000
+    );
+
+
+    if(timer){
+
+      timer.innerText =
+      hours+"h "+
+      minutes+"m "+
+      seconds+"s remaining";
+
+    }
+
+  }
+
+}
+
+
+/* =========================
+   COLLECT EGGS
+========================= */
+
+async function collectEggs(){
+
+  const hens =
+  Number(data.hens || 0);
+
+
+  if(hens <= 0){
+
+    toast(
+      "First buy a Golden Hen"
+    );
+
+    return;
+  }
+
+
+  if(!data.lastEggTime){
+
+    data.lastEggTime =
+    Date.now();
+
+    await saveData();
+
+    toast(
+      "Production timer started"
+    );
+
+    return;
+  }
+
+
+  const now =
+  Date.now();
+
+
+  const oneDay =
+  24 * 60 * 60 * 1000;
+
+
+  const elapsed =
+  now -
+  Number(data.lastEggTime);
+
+
+  const cycles =
+  Math.floor(
+    elapsed / oneDay
+  );
+
+
+  if(cycles < 1){
+
+    toast(
+      "Eggs are not ready yet"
+    );
+
+    return;
+  }
+
+
+  const newEggs =
+  cycles * hens;
+
+
+  data.eggs +=
+  newEggs;
+
+
+  data.lastEggTime +=
+  cycles * oneDay;
+
+
+  data.history.push({
+
+    type:
+    "Egg Collection",
+
+    amount:
+    newEggs,
+
+    time:
+    Date.now()
+
+  });
+
+
+  await saveData();
+
+  updateUI();
+
+
+  toast(
+    newEggs+
+    " virtual egg(s) collected"
+  );
+
+}
+
+window.collectEggs =
+collectEggs;
+
+
+/* =========================
+   SELL EGGS
+========================= */
+
+async function sellEggs(){
+
+  const eggs =
+  Number(data.eggs || 0);
+
+
+  if(eggs <= 0){
+
+    toast(
+      "You have no eggs to sell"
+    );
+
+    return;
+  }
+
+
+  const rate =
+  getEggRate();
+
+
+  const amount =
+  eggs * rate;
+
+
+  data.eggs =
+  0;
+
+
+  data.balance +=
+  amount;
+
+
+  data.totalEarned +=
+  amount;
+
+
+  data.history.push({
+
+    type:
+    "Egg Sale",
+
+    amount:
+    amount,
+
+    eggs:
+    eggs,
+
+    time:
+    Date.now()
+
+  });
+
+
+  await saveData();
+
+  updateUI();
+
+
+  toast(
+    "Eggs sold for Rs. "+
+    amount
+  );
+
+}
+
+window.sellEggs =
+sellEggs;
+
+
+/* =========================
+   PAYMENT NUMBER
+========================= */
+
+function updatePaymentNumber(){
+
+  const method =
+  el("depositMethod").value;
+
+
+  const box =
+  el("paymentNumber");
+
+
+  if(method === "JazzCash"){
+
+    box.innerText =
+    JAZZCASH_NUMBER;
+
+  }else{
+
+    box.innerText =
+    EASYPAISA_NUMBER;
+
+  }
+
+}
+
+window.updatePaymentNumber =
+updatePaymentNumber;
+
+
+/* =========================
+   SUBMIT DEPOSIT
+========================= */
+
+async function submitDeposit(){
+
+  const user =
+  auth.currentUser;
+
+
+  if(!user){
+
+    toast(
+      "Please login first"
+    );
+
+    return;
+  }
+
+
+  const amountInput =
+  el("depositAmount");
+
+
+  const transactionInput =
+  el("transactionId");
+
+
+  const methodInput =
+  el("depositMethod");
+
+
+  if(
+    !amountInput ||
+    !transactionInput ||
+    !methodInput
+  ){
+
+    toast(
+      "Deposit form error"
+    );
+
+    return;
+  }
+
+
+  const amount =
+  Number(
+    amountInput.value
+  );
+
+
+  const transactionId =
+  transactionInput.value.trim();
+
+
+  const method =
+  methodInput.value;
+
+
+  if(!amount || amount <= 0){
+
+    toast(
+      "Enter a valid amount"
+    );
+
+    amountInput.focus();
+
+    return;
+  }
+
+
+  if(transactionId === ""){
+
+    toast(
+      "Please enter Transaction ID"
+    );
+
+    transactionInput.focus();
+
+    return;
+  }
+
+
+  if(transactionId.length < 4){
+
+    toast(
+      "Transaction ID is too short"
+    );
+
+    transactionInput.focus();
+
+    return;
+  }
+
+
+  try{
+
+    await addDoc(
+
+      collection(
+        db,
+        "depositRequests"
+      ),
+
+      {
+
+        userId:
+        user.uid,
+
+        email:
+        user.email || "",
+
+        amount:
+        amount,
+
+        method:
+        method,
+
+        transactionId:
+        transactionId,
+
+        status:
+        "Pending",
+
+        createdAt:
+        serverTimestamp(),
+
+        createdAtMs:
+        Date.now()
+
+      }
+
+    );
+
+
+    amountInput.value =
+    "";
+
+
+    transactionInput.value =
+    "";
+
+
+    toast(
+      "Deposit request submitted successfully"
+    );
+
+
+    await loadDepositHistory();
+
+
+  }catch(error){
+
+    console.error(error);
+
+
+    toast(
+      "Deposit failed: "+
+      error.message
+    );
+
+  }
+
+}
+
+window.submitDeposit =
+submitDeposit;
+
+
+/* =========================
+   DEPOSIT HISTORY
+========================= */
+
+async function loadDepositHistory(){
+
+  const user =
+  auth.currentUser;
+
+
+  if(!user)return;
+
+
+  const box =
+  el("depositHistory");
+
+
+  if(!box)return;
+
+
+  try{
+
+    const q =
+    query(
+
+      collection(
+        db,
+        "depositRequests"
+      ),
+
+      where(
+        "userId",
+        "==",
+        user.uid
+      )
+
+    );
+
+
+    const snap =
+    await getDocs(q);
+
+
+    if(snap.empty){
+
+      box.innerHTML =
+      '<div class="empty">No deposit requests yet.</div>';
+
+      return;
+    }
+
+
+    let requests=[];
+
+
+    snap.forEach(
+      docSnap=>{
+
+        requests.push({
+
+          id:
+          docSnap.id,
+
+          ...docSnap.data()
+
+        });
+
+      }
+    );
+
+
+    requests.sort(
+
+      (a,b)=>
+
+      Number(
+        b.createdAtMs || 0
+      )
+      -
+      Number(
+        a.createdAtMs || 0
+      )
+
+    );
+
+
+    box.innerHTML =
+    "";
+
+
+    requests.forEach(
+      item=>{
+
+        const status =
+        String(
+          item.status ||
+          "Pending"
+        ).toLowerCase();
+
+
+        let statusClass =
+        "status-pending";
+
+
+        if(
+          status ===
+          "approved"
+        ){
+
+          statusClass =
+          "status-approved";
+
+        }
+
+
+        if(
+          status ===
+          "rejected"
+        ){
+
+          statusClass =
+          "status-rejected";
+
+        }
+
+
+        const div =
+        document.createElement(
+          "div"
+        );
+
+
+        div.className =
+        "deposit-status";
+
+
+        div.innerHTML =
+
+        "<div><strong>"+
+        escapeHtml(
+          item.method || ""
+        )+
+        "</strong></div>"+
+
+        "<div>Amount: Rs. "+
+        escapeHtml(
+          String(
+            item.amount || 0
+          )
+        )+
+        "</div>"+
+
+        "<div>Transaction ID: "+
+        escapeHtml(
+          item.transactionId || ""
+        )+
+        "</div>"+
+
+        "<div>Status: <strong class='"+
+        statusClass+
+        "'>"+
+        escapeHtml(
+          item.status ||
+          "Pending"
+        )+
+        "</strong></div>";
+
+
+        box.appendChild(
+          div
+        );
+
+      }
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+
+    box.innerHTML =
+    '<div class="muted">Could not load deposit history.</div>';
+
+  }
+
+}
+
+window.loadDepositHistory =
+loadDepositHistory;
+
+
+/* =========================
+   WITHDRAW
+========================= */
+
+function withdraw(){
+
+  showPage(
+    "withdraw"
+  );
+
+}
+
+window.withdraw =
+withdraw;
+
+
+/* =========================
+   SUBMIT WITHDRAWAL
+========================= */
+
+async function submitWithdrawal(){
+
+  const user =
+  auth.currentUser;
+
+
+  if(!user){
+
+    toast(
+      "Please login first"
+    );
+
+    return;
+  }
+
+
+  const amountInput =
+  el("withdrawAmount");
+
+
+  const methodInput =
+  el("withdrawMethod");
+
+
+  const numberInput =
+  el("withdrawNumber");
+
+
+  if(
+    !amountInput ||
+    !methodInput ||
+    !numberInput
+  ){
+
+    toast(
+      "Withdrawal form error"
+    );
+
+    return;
+  }
+
+
+  const amount =
+  Number(
+    amountInput.value
+  );
+
+
+  const method =
+  methodInput.value;
+
+
+  const receiverNumber =
+  numberInput.value.trim();
+
+
+  if(!amount || amount <= 0){
+
+    toast(
+      "Enter a valid withdrawal amount"
+    );
+
+    amountInput.focus();
+
+    return;
+  }
+
+
+  if(
+    amount >
+    Number(data.balance || 0)
+  ){
+
+    toast(
+      "Insufficient balance"
+    );
+
+    return;
+  }
+
+
+  if(receiverNumber === ""){
+
+    toast(
+      "Enter your account number"
+    );
+
+    numberInput.focus();
+
+    return;
+  }
+
+
+  if(
+    receiverNumber.length < 10
+  ){
+
+    toast(
+      "Enter a valid account number"
+    );
+
+    numberInput.focus();
+
+    return;
+  }
+
+
+  try{
+
+    await addDoc(
+
+      collection(
+        db,
+        "withdrawalRequests"
+      ),
+
+      {
+
+        userId:
+        user.uid,
+
+        email:
+        user.email || "",
+
+        amount:
+        amount,
+
+        method:
+        method,
+
+        receiverNumber:
+        receiverNumber,
+
+        status:
+        "Pending",
+
+        createdAt:
+        serverTimestamp(),
+
+        createdAtMs:
+        Date.now()
+
+      }
+
+    );
+
+
+    amountInput.value =
+    "";
+
+
+    numberInput.value =
+    "";
+
+
+    toast(
+      "Withdrawal request submitted successfully"
+    );
+
+
+    await loadWithdrawalHistory();
+
+
+  }catch(error){
+
+    console.error(error);
+
+
+    toast(
+      "Withdrawal failed: "+
+      error.message
+    );
+
+  }
+
+}
+
+window.submitWithdrawal =
+submitWithdrawal;
+
+
+/* =========================
+   WITHDRAWAL HISTORY
+========================= */
+
+async function loadWithdrawalHistory(){
+
+  const user =
+  auth.currentUser;
+
+
+  if(!user)return;
+
+
+  const box =
+  el("withdrawalHistory");
+
+
+  if(!box)return;
+
+
+  try{
+
+    const q =
+    query(
+
+      collection(
+        db,
+        "withdrawalRequests"
+      ),
+
+      where(
+        "userId",
+        "==",
+        user.uid
+      )
+
+    );
+
+
+    const snap =
+    await getDocs(q);
+
+
+    if(snap.empty){
+
+      box.innerHTML =
+      '<div class="empty">No withdrawal requests yet.</div>';
+
+      return;
+    }
+
+
+    let requests=[];
+
+
+    snap.forEach(
+      docSnap=>{
+
+        requests.push({
+
+          id:
+          docSnap.id,
+
+          ...docSnap.data()
+
+        });
+
+      }
+    );
+
+
+    requests.sort(
+
+      (a,b)=>
+
+      Number(
+        b.createdAtMs || 0
+      )
+      -
+      Number(
+        a.createdAtMs || 0
+      )
+
+    );
+
+
+    box.innerHTML =
+    "";
+
+
+    requests.forEach(
+      item=>{
+
+        const status =
+        String(
+          item.status ||
+          "Pending"
+        ).toLowerCase();
+
+
+        let statusClass =
+        "status-pending";
+
+
+        if(
+          status ===
+          "paid"
+        ){
+
+          statusClass =
+          "status-paid";
+
+        }
+
+
+        if(
+          status ===
+          "rejected"
+        ){
+
+          statusClass =
+          "status-rejected";
+
+        }
+
+
+        const div =
+        document.createElement(
+          "div"
+        );
+
+
+        div.className =
+        "deposit-status";
+
+
+        div.innerHTML =
+
+        "<div><strong>"+
+        escapeHtml(
+          item.method || ""
+        )+
+        "</strong></div>"+
+
+        "<div>Amount: Rs. "+
+        escapeHtml(
+          String(
+            item.amount || 0
+          )
+        )+
+        "</div>"+
+
+        "<div>Account: "+
+        escapeHtml(
+          item.receiverNumber || ""
+        )+
+        "</div>"+
+
+        "<div>Status: <strong class='"+
+        statusClass+
+        "'>"+
+        escapeHtml(
+          item.status ||
+          "Pending"
+        )+
+        "</strong></div>";
+
+
+        box.appendChild(
+          div
+        );
+
+      }
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+
+    box.innerHTML =
+    '<div class="muted">Could not load withdrawal history.</div>';
+
+  }
+
+}
+
+window.loadWithdrawalHistory =
+loadWithdrawalHistory;
+
+
+/* =========================
+   SETTINGS
+========================= */
+
+function showSettings(){
+
+  showPage(
+    "settings"
+  );
+
+}
+
+window.showSettings =
+showSettings;
+
+
+function closeSettings(){
+
+  showPage(
+    "profile"
+  );
+
+}
+
+window.closeSettings =
+closeSettings;
+
+
+/* =========================
+   CHANGE PASSWORD
+========================= */
+
+async function changePassword(){
+
+  const user =
+  auth.currentUser;
+
+
+  if(!user){
+
+    toast(
+      "Please login first"
+    );
+
+    return;
+  }
+
+
+  const newPassword =
+  el("newPassword").value;
+
+
+  const confirmPassword =
+  el("confirmPassword").value;
+
+
+  if(newPassword.length < 6){
+
+    toast(
+      "Password must be at least 6 characters"
+    );
+
+    return;
+  }
+
+
+  if(
+    newPassword !==
+    confirmPassword
+  ){
+
+    toast(
+      "Passwords do not match"
+    );
+
+    return;
+  }
+
+
+  try{
+
+    await updatePassword(
+      user,
+      newPassword
+    );
+
+
+    el("newPassword").value =
+    "";
+
+
+    el("confirmPassword").value =
+    "";
+
+
+    toast(
+      "Password changed successfully"
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+
+    toast(
+      error.message
+    );
+
+  }
+
+}
+
+window.changePassword =
+changePassword;
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+async function logout(){
+
+  try{
+
+    await signOut(auth);
+
+
+    data = {
+
+      email:"",
+
+      balance:0,
+
+      hens:0,
+
+      eggs:0,
+
+      totalEarned:0,
+
+      referrals:0,
+
+      lastEggTime:0,
+
+      history:[]
+
+    };
+
+
+    el("app").style.display =
+    "none";
+
+
+    el("loginScreen").style.display =
+    "flex";
+
+
+    toast(
+      "Logged out"
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+
+    toast(
+      error.message
+    );
+
+  }
+
+}
+
+window.logout =
+logout;
+
+
+/* =========================
+   AUTH STATE
+========================= */
+
+onAuthStateChanged(
+
+  auth,
+
+  async user=>{
+
+    if(user){
+
+      el("loginScreen")
+      .style.display =
+      "none";
+
+
+      el("app")
+      .style.display =
+      "block";
+
+
+      await loadData();
+
+
+      updateUI();
+
+
+    }else{
+
+      el("app")
+      .style.display =
+      "none";
+
+
+      el("loginScreen")
+      .style.display =
+      "flex";
+
+    }
+
+  }
+
+);
+
+
+/* =========================
+   PRODUCTION TIMER
+========================= */
+
+setInterval(
+
+  updateProduction,
+
+  1000
+
+);
+
+</script>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     LOGIN SCREEN
+========================= -->
+
+<div
+id="loginScreen"
+class="screen login-screen"
+>
+
+  <div class="login-box">
+
+    <div class="logo">
+      🐔
+    </div>
+
+    <div class="login-title">
+      GOLDEN HEN
+    </div>
+
+    <div class="subtitle">
+      Build your virtual farm
+    </div>
+
+
+    <input
+      id="email"
+      class="input"
+      type="email"
+      placeholder="Email"
+    >
+
+
+    <input
+      id="password"
+      class="input"
+      type="password"
+      placeholder="Password"
+    >
+
+
+    <button
+      class="btn"
+      onclick="login()"
+    >
+      LOGIN
+    </button>
+
+
+    <button
+      class="btn secondary"
+      onclick="signup()"
+    >
+      CREATE ACCOUNT
+    </button>
+
+
+    <div
+      class="muted"
+      style="margin-top:18px;"
+    >
+      Golden Hen • Virtual rewards system
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     MAIN APP
+========================= -->
+
+<div
+id="app"
+style="display:none;"
+>
+
+
+<!-- TOP BAR -->
+
+<div class="topbar">
+
+  <div class="brand">
+    🐔 Golden Hen
+  </div>
+
+  <div
+    id="userEmail"
+    class="top-user"
+  >
+    Guest
+  </div>
+
+</div>
+
+
+<!-- =========================
+     HOME
+========================= -->
+
+<section
+id="home"
+class="page active"
+>
+
+  <div class="heading">
+    Home
+  </div>
+
+
+  <div class="card balance-card">
+
+    <div class="balance-label">
+      AVAILABLE BALANCE
+    </div>
+
+    <div
+      id="balance"
+      class="balance"
+    >
+      Rs. 0
+    </div>
+
+  </div>
+
+
+  <div class="stats">
+
+    <div class="stat">
+
+      <div
+        id="hens"
+        class="stat-value"
+      >
+        0
+      </div>
+
+      <div class="stat-label">
+        MY HENS
+      </div>
+
+    </div>
+
+
+    <div class="stat">
+
+      <div
+        id="eggs"
+        class="stat-value"
+      >
+        0
+      </div>
+
+      <div class="stat-label">
+        EGGS
+      </div>
+
+    </div>
+
+
+    <div class="stat">
+
+      <div
+        id="referrals"
+        class="stat-value"
+      >
+        0
+      </div>
+
+      <div class="stat-label">
+        REFERRALS
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="shop">
+
+    <span class="vip">
+      VIP HEN
+    </span>
+
+    <h2>
+      Golden Hen
+    </h2>
+
+    <div class="muted">
+      1 Golden Hen produces
+      1 virtual egg every
+      24 hours.
+    </div>
+
+    <div class="price">
+      Rs. 600
+    </div>
+
+    <button
+      class="btn"
+      onclick="buyHen()"
+    >
+      BUY GOLDEN HEN
+    </button>
+
+  </div>
+
+
+  <div class="card">
+
+    <h3>
+      Egg Rates
+    </h3>
+
+    <table class="rate-table">
+
+      <tr>
+        <th>Egg Quantity</th>
+        <th>Rate</th>
+      </tr>
+
+      <tr>
+        <td>1–9 Eggs</td>
+        <td>Rs. 35 / egg</td>
+      </tr>
+
+      <tr>
+        <td>10–19 Eggs</td>
+        <td>Rs. 40 / egg</td>
+      </tr>
+
+      <tr>
+        <td>20–29 Eggs</td>
+        <td>Rs. 45 / egg</td>
+      </tr>
+
+      <tr>
+        <td>30+ Eggs</td>
+        <td>Rs. 50 / egg</td>
+      </tr>
+
+    </table>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     HENS
+========================= -->
+
+<section
+id="hensPage"
+class="page"
+>
+
+  <div class="heading">
+    Golden Hens
+  </div>
+
+
+  <div class="card">
+
+    <div class="muted">
+      YOUR GOLDEN HENS
+    </div>
+
+    <div
+      id="hens2"
+      class="big-number"
+    >
+      0
+    </div>
+
+    <div class="muted">
+      Each hen produces one virtual
+      egg after every 24 hours.
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <h3>
+      Egg Production
+    </h3>
+
+    <div class="progress-box">
+
+      <div
+        id="progressBar"
+        class="progress-bar"
+      ></div>
+
+    </div>
+
+
+    <div
+      id="timer"
+      class="timer"
+    >
+      No active hens
+    </div>
+
+
+    <button
+      class="btn"
+      onclick="collectEggs()"
+    >
+      COLLECT EGGS
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     EGGS
+========================= -->
+
+<section
+id="eggsPage"
+class="page"
+>
+
+  <div class="heading">
+    Eggs
+  </div>
+
+
+  <div class="card">
+
+    <div class="muted">
+      EGG INVENTORY
+    </div>
+
+
+    <div
+      id="eggInventory"
+      class="big-number"
+    >
+      0
+    </div>
+
+
+    <div class="muted">
+      Estimated current value
+    </div>
+
+
+    <div
+      id="eggValue"
+      class="price"
+    >
+      Rs. 0
+    </div>
+
+
+    <button
+      class="btn"
+      onclick="sellEggs()"
+    >
+      SELL ALL EGGS
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     SELL
+========================= -->
+
+<section
+id="sell"
+class="page"
+>
+
+  <div class="heading">
+    Sell Eggs
+  </div>
+
+
+  <div class="card">
+
+    <h3>
+      Current Egg Rates
+    </h3>
+
+
+    <table class="rate-table">
+
+      <tr>
+        <th>Quantity</th>
+        <th>Price</th>
+      </tr>
+
+      <tr>
+        <td>1–9</td>
+        <td>Rs. 35 / egg</td>
+      </tr>
+
+      <tr>
+        <td>10–19</td>
+        <td>Rs. 40 / egg</td>
+      </tr>
+
+      <tr>
+        <td>20–29</td>
+        <td>Rs. 45 / egg</td>
+      </tr>
+
+      <tr>
+        <td>30+</td>
+        <td>Rs. 50 / egg</td>
+      </tr>
+
+    </table>
+
+
+    <button
+      class="btn"
+      onclick="sellEggs()"
+    >
+      SELL ALL EGGS
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     WALLET
+========================= -->
+
+<section
+id="wallet"
+class="page"
+>
+
+  <div class="heading">
+    Wallet
+  </div>
+
+
+  <div class="card balance-card">
+
+    <div class="balance-label">
+      AVAILABLE BALANCE
+    </div>
+
+    <div
+      id="walletBalance"
+      class="balance"
+    >
+      Rs. 0
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="balance-label">
+      TOTAL EARNED
+    </div>
+
+    <div
+      id="totalEarned"
+      class="price"
+    >
+      Rs. 0
+    </div>
+
+
+    <button
+      class="btn"
+      onclick="showPage('deposit')"
+    >
+      💰 DEPOSIT
+    </button>
+
+
+    <button
+      class="btn secondary"
+      onclick="withdraw()"
+    >
+      💸 WITHDRAW
+    </button>
+
+
+    <div class="notice">
+      Withdrawal requests are sent for
+      verification. Payment should only
+      be marked Paid after the actual
+      payment has been completed.
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     WITHDRAW
+========================= -->
+
+<section
+id="withdraw"
+class="page"
+>
+
+  <div class="heading">
+    Withdraw
+  </div>
+
+
+  <div class="card">
+
+    <button
+      class="btn secondary"
+      onclick="showPage('wallet')"
+    >
+      ⬅️ BACK TO WALLET
+    </button>
+
+  </div>
+
+
+  <div class="card">
+
+    <h3>
+      Withdraw Money
+    </h3>
+
+
+    <div class="notice">
+      Enter the amount and your
+      JazzCash or Easypaisa number.
+      Your request will remain Pending
+      until it is verified and processed.
+    </div>
+
+
+    <div class="balance-label">
+      AVAILABLE BALANCE
+    </div>
+
+
+    <div
+      id="withdrawAvailableBalance"
+      class="price"
+    >
+      Rs. 0
+    </div>
+
+
+    <input
+      id="withdrawAmount"
+      class="input"
+      type="number"
+      min="1"
+      placeholder="Enter withdrawal amount"
+    >
+
+
+    <select
+      id="withdrawMethod"
+      class="select"
+    >
+
+      <option value="JazzCash">
+        JazzCash
+      </option>
+
+      <option value="Easypaisa">
+        Easypaisa
+      </option>
+
+    </select>
+
+
+    <input
+      id="withdrawNumber"
+      class="input"
+      type="tel"
+      placeholder="Enter JazzCash/Easypaisa number"
+    >
+
+
+    <button
+      class="btn"
+      onclick="submitWithdrawal()"
+    >
+      SUBMIT WITHDRAWAL REQUEST
+    </button>
+
+  </div>
+
+
+  <div class="card">
+
+    <h3>
+      Withdrawal History
+    </h3>
+
+
+    <div
+      id="withdrawalHistory"
+    >
+
+      <div class="empty">
+        No withdrawal requests yet.
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     DEPOSIT
+========================= -->
+
+<section
+id="deposit"
+class="page"
+>
+
+  <div class="heading">
+    Deposit
+  </div>
+
+
+  <div class="card">
+
+    <h3>
+      Add Balance
+    </h3>
+
+
+    <div class="notice">
+      Send your payment to the selected
+      payment number. Then enter the exact
+      amount and transaction ID below.
+      Your request will remain Pending until
+      it is verified.
+    </div>
+
+
+    <select
+      id="depositMethod"
+      class="select"
+      onchange="updatePaymentNumber()"
+    >
+
+      <option value="JazzCash">
+        JazzCash
+      </option>
+
+      <option value="Easypaisa">
+        Easypaisa
+      </option>
+
+    </select>
+
+
+    <div
+      id="paymentNumber"
+      class="payment-number"
+    >
+      03482179022
+    </div>
+
+
+    <input
+      id="depositAmount"
+      class="input"
+      type="number"
+      min="1"
+      placeholder="Enter amount e.g. 1000"
+    >
+
+
+    <input
+      id="transactionId"
+      class="input"
+      type="text"
+      placeholder="Enter transaction ID"
+    >
+
+
+    <button
+      class="btn"
+      onclick="submitDeposit()"
+    >
+      SUBMIT DEPOSIT REQUEST
+    </button>
+
+  </div>
+
+
+  <div class="card">
+
+    <h3>
+      Deposit History
+    </h3>
+
+
+    <div
+      id="depositHistory"
+    >
+
+      <div class="empty">
+        No deposit requests yet.
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     PROFILE
+========================= -->
+
+<section
+id="profile"
+class="page"
+>
+
+  <div class="heading">
+    Profile
+  </div>
+
+
+  <div class="card">
+
+    <div class="profile-avatar">
+      🐔
+    </div>
+
+
+    <div class="profile-name">
+      Golden Hen Member
+    </div>
+
+
+    <div
+      id="profileEmail"
+      class="profile-email"
+    >
+      Guest
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <button
+      class="btn"
+      onclick="showSettings()"
+    >
+      ⚙️ SETTINGS
+    </button>
+
+
+    <button
+      class="btn logout"
+      onclick="logout()"
+    >
+      LOGOUT
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     SETTINGS
+========================= -->
+
+<section
+id="settings"
+class="page"
+>
+
+  <div class="heading">
+    Settings
+  </div>
+
+
+  <div class="card">
+
+    <button
+      class="btn secondary"
+      onclick="closeSettings()"
+    >
+      ⬅️ BACK TO PROFILE
+    </button>
+
+  </div>
+
+
+  <div class="card">
+
+    <h3>
+      Account Information
+    </h3>
+
+
+    <div class="setting-row">
+
+      <div class="setting-title">
+        Email
+      </div>
+
+      <div
+        id="settingsEmail"
+        class="setting-value"
+      >
+        Guest
+      </div>
+
+    </div>
+
+
+    <div class="setting-row">
+
+      <div class="setting-title">
+        Account
+      </div>
+
+      <div class="setting-value">
+        Golden Hen Member
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <h3>
+      Change Password
+    </h3>
+
+
+    <input
+      id="newPassword"
+      class="input"
+      type="password"
+      placeholder="New password"
+    >
+
+
+    <input
+      id="confirmPassword"
+      class="input"
+      type="password"
+      placeholder="Confirm new password"
+    >
+
+
+    <button
+      class="btn"
+      onclick="changePassword()"
+    >
+      CHANGE PASSWORD
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     BOTTOM NAV
+========================= -->
+
+<div class="bottom-nav">
+
+
+  <button
+    class="nav-btn active"
+    data-page="home"
+    onclick="showPage('home')"
+  >
+
+    <span>🏠</span>
+
+    Home
+
+  </button>
+
+
+  <button
+    class="nav-btn"
+    data-page="hensPage"
+    onclick="showPage('hensPage')"
+  >
+
+    <span>🐔</span>
+
+    Hens
+
+  </button>
+
+
+  <button
+    class="nav-btn"
+    data-page="eggsPage"
+    onclick="showPage('eggsPage')"
+  >
+
+    <span>🥚</span>
+
+    Eggs
+
+  </button>
+
+
+  <button
+    class="nav-btn"
+    data-page="sell"
+    onclick="showPage('sell')"
+  >
+
+    <span>💰</span>
+
+    Sell
+
+  </button>
+
+
+  <button
+    class="nav-btn"
+    data-page="wallet"
+    onclick="showPage('wallet')"
+  >
+
+    <span>👛</span>
+
+    Wallet
+
+  </button>
+
+
+  <button
+    class="nav-btn"
+    data-page="profile"
+    onclick="showPage('profile')"
+  >
+
+    <span>👤</span>
+
+    Profile
+
+  </button>
+
+
+</div>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div
+id="toast"
+class="toast"
+>
+Message
+</div>
+
+
+</body>
+</html>

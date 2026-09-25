@@ -1,0 +1,1866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Golden Hen Admin</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  background:#101010;
+  color:#fff;
+  min-height:100vh;
+}
+
+button,input{
+  font-family:Arial,sans-serif;
+}
+
+#loginScreen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.login-box{
+  width:100%;
+  max-width:420px;
+  padding:28px 20px;
+  background:#1c1c1c;
+  border:1px solid #d6a72c;
+  border-radius:20px;
+  text-align:center;
+}
+
+.logo{
+  font-size:55px;
+}
+
+h1{
+  color:#ffd54a;
+  margin:8px 0 20px;
+}
+
+.input{
+  width:100%;
+  padding:14px;
+  margin:7px 0;
+  background:#252525;
+  border:1px solid #444;
+  color:#fff;
+  border-radius:10px;
+  outline:none;
+}
+
+.input:focus{
+  border-color:#ffd54a;
+}
+
+.btn{
+  width:100%;
+  padding:13px;
+  margin-top:9px;
+  border:0;
+  border-radius:10px;
+  background:linear-gradient(135deg,#ffd54a,#d99b00);
+  color:#111;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.btn.secondary{
+  background:#292929;
+  color:#fff;
+  border:1px solid #555;
+}
+
+.btn.green{
+  background:#1d8f4d;
+  color:#fff;
+}
+
+.btn.red{
+  background:#a82d2d;
+  color:#fff;
+}
+
+#adminApp{
+  display:none;
+  min-height:100vh;
+  padding-bottom:30px;
+}
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:10;
+  padding:15px;
+  background:#181818;
+  border-bottom:1px solid #333;
+}
+
+.topbar-inner{
+  max-width:800px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.brand{
+  color:#ffd54a;
+  font-weight:bold;
+  font-size:20px;
+}
+
+.admin-email{
+  color:#999;
+  font-size:11px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.container{
+  max-width:800px;
+  margin:auto;
+  padding:18px;
+}
+
+.heading{
+  color:#ffd54a;
+  font-size:25px;
+  font-weight:bold;
+  margin-bottom:15px;
+}
+
+.card{
+  background:#1c1c1c;
+  border:1px solid #333;
+  border-radius:16px;
+  padding:17px;
+  margin-bottom:15px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-bottom:15px;
+}
+
+.stat{
+  background:#222;
+  border:1px solid #333;
+  border-radius:12px;
+  padding:15px 7px;
+  text-align:center;
+}
+
+.stat-number{
+  color:#ffd54a;
+  font-size:25px;
+  font-weight:bold;
+}
+
+.stat-label{
+  color:#999;
+  font-size:11px;
+  margin-top:5px;
+}
+
+.request{
+  background:#222;
+  border:1px solid #393939;
+  border-radius:13px;
+  padding:15px;
+  margin-top:12px;
+}
+
+.request-title{
+  color:#ffd54a;
+  font-size:17px;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:6px 0;
+  border-bottom:1px solid #303030;
+  font-size:13px;
+}
+
+.row:last-child{
+  border-bottom:0;
+}
+
+.label{
+  color:#999;
+}
+
+.value{
+  text-align:right;
+  word-break:break-all;
+}
+
+.status{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:bold;
+}
+
+.pending{
+  color:#ffd54a;
+  background:#3a300e;
+}
+
+.approved{
+  color:#4ade80;
+  background:#123521;
+}
+
+.rejected{
+  color:#ff6b6b;
+  background:#3a1515;
+}
+
+.actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:12px;
+}
+
+.empty{
+  text-align:center;
+  color:#888;
+  padding:25px 5px;
+}
+
+.notice{
+  background:#282828;
+  border-left:4px solid #ffd54a;
+  padding:12px;
+  border-radius:7px;
+  color:#bbb;
+  font-size:12px;
+  line-height:1.5;
+}
+
+.toast{
+  display:none;
+  position:fixed;
+  left:50%;
+  bottom:25px;
+  transform:translateX(-50%);
+  z-index:100;
+  max-width:90%;
+  background:#ffd54a;
+  color:#111;
+  padding:12px 18px;
+  border-radius:25px;
+  font-size:13px;
+  font-weight:bold;
+}
+
+@media(max-width:420px){
+
+  .stats{
+    gap:6px;
+  }
+
+  .stat-number{
+    font-size:21px;
+  }
+
+  .actions{
+    grid-template-columns:1fr;
+  }
+
+}
+
+</style>
+
+
+<script type="module">
+
+/* =================================
+   FIREBASE IMPORTS
+================================= */
+
+import {
+  initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  query,
+  where,
+  doc,
+  updateDoc,
+  increment
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+/* =================================
+   FIREBASE CONFIG
+================================= */
+
+const firebaseConfig = {
+
+  apiKey:
+  "AIzaSyD-uhTjZklnHdeOXMyR_gRiAWXyqIwAuFk",
+
+  authDomain:
+  "earn-app-8f00d.firebaseapp.com",
+
+  projectId:
+  "earn-app-8f00d",
+
+  storageBucket:
+  "earn-app-8f00d.firebasestorage.app",
+
+  messagingSenderId:
+  "864949482951",
+
+  appId:
+  "1:864949482951:web:1ce6dd7fe2b911ecea55e2",
+
+  measurementId:
+  "G-MBV2HQ0H49"
+
+};
+
+
+/* =================================
+   FIREBASE START
+================================= */
+
+const firebaseApp =
+initializeApp(firebaseConfig);
+
+const auth =
+getAuth(firebaseApp);
+
+const db =
+getFirestore(firebaseApp);
+
+
+/* =================================
+   ADMIN EMAIL
+================================= */
+
+const ADMIN_EMAIL =
+"ka231358@gmail.com";
+
+
+/* =================================
+   HELPERS
+================================= */
+
+function el(id){
+
+  return document.getElementById(id);
+
+}
+
+
+function toast(message){
+
+  const box =
+  el("toast");
+
+  box.innerText =
+  message;
+
+  box.style.display =
+  "block";
+
+  setTimeout(()=>{
+
+    box.style.display =
+    "none";
+
+  },3000);
+
+}
+
+
+function escapeHtml(value){
+
+  return String(value)
+
+  .replace(/&/g,"&amp;")
+
+  .replace(/</g,"&lt;")
+
+  .replace(/>/g,"&gt;")
+
+  .replace(/"/g,"&quot;")
+
+  .replace(/'/g,"&#039;");
+
+}
+
+
+/* =================================
+   ADMIN LOGIN
+================================= */
+
+async function adminLogin(){
+
+  const email =
+  el("adminEmail").value.trim();
+
+  const password =
+  el("adminPassword").value;
+
+
+  if(!email || !password){
+
+    toast(
+      "Enter admin email and password"
+    );
+
+    return;
+  }
+
+
+  if(
+    email.toLowerCase() !==
+    ADMIN_EMAIL.toLowerCase()
+  ){
+
+    toast(
+      "This email is not authorized as admin"
+    );
+
+    return;
+  }
+
+
+  try{
+
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      error.message
+    );
+
+  }
+
+}
+
+window.adminLogin =
+adminLogin;
+
+
+/* =================================
+   ADMIN AUTH STATE
+================================= */
+
+onAuthStateChanged(
+
+  auth,
+
+  async user=>{
+
+    if(user){
+
+      if(
+        user.email.toLowerCase() !==
+        ADMIN_EMAIL.toLowerCase()
+      ){
+
+        await signOut(auth);
+
+        toast(
+          "Admin access denied"
+        );
+
+        return;
+      }
+
+
+      el("loginScreen")
+      .style.display =
+      "none";
+
+
+      el("adminApp")
+      .style.display =
+      "block";
+
+
+      el("adminEmailText")
+      .innerText =
+      user.email;
+
+
+      await loadDashboard();
+
+
+    }else{
+
+      el("loginScreen")
+      .style.display =
+      "flex";
+
+
+      el("adminApp")
+      .style.display =
+      "none";
+
+    }
+
+  }
+
+);
+
+
+/* =================================
+   DASHBOARD
+================================= */
+
+async function loadDashboard(){
+
+  await loadDepositRequests();
+
+  await loadWithdrawalRequests();
+
+  await loadUsers();
+
+}
+
+
+/* =================================
+   DEPOSIT REQUESTS
+================================= */
+
+async function loadDepositRequests(){
+
+  const box =
+  el("depositList");
+
+
+  box.innerHTML =
+  '<div class="empty">Loading deposits...</div>';
+
+
+  try{
+
+    const snap =
+    await getDocs(
+      collection(
+        db,
+        "depositRequests"
+      )
+    );
+
+
+    if(snap.empty){
+
+      box.innerHTML =
+      '<div class="empty">No deposit requests.</div>';
+
+      el("depositCount").innerText =
+      "0";
+
+      return;
+    }
+
+
+    let requests=[];
+
+
+    snap.forEach(
+      item=>{
+
+        requests.push({
+
+          id:
+          item.id,
+
+          ...item.data()
+
+        });
+
+      }
+    );
+
+
+    requests.sort(
+
+      (a,b)=>
+
+      Number(
+        b.createdAtMs || 0
+      )
+      -
+      Number(
+        a.createdAtMs || 0
+      )
+
+    );
+
+
+    let pendingCount=0;
+
+
+    box.innerHTML =
+    "";
+
+
+    requests.forEach(
+      item=>{
+
+        const status =
+        String(
+          item.status ||
+          "Pending"
+        );
+
+
+        if(
+          status.toLowerCase() ===
+          "pending"
+        ){
+
+          pendingCount++;
+
+        }
+
+
+        const statusClass =
+        status.toLowerCase() ===
+        "approved"
+        ? "approved"
+
+        : status.toLowerCase() ===
+        "rejected"
+        ? "rejected"
+
+        : "pending";
+
+
+        const div =
+        document.createElement(
+          "div"
+        );
+
+
+        div.className =
+        "request";
+
+
+        div.innerHTML = `
+
+          <div class="request-title">
+            💰 Deposit Request
+          </div>
+
+          <div class="row">
+            <span class="label">Email</span>
+            <span class="value">
+              ${escapeHtml(item.email || "")}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">Amount</span>
+            <span class="value">
+              Rs. ${escapeHtml(item.amount || 0)}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">Method</span>
+            <span class="value">
+              ${escapeHtml(item.method || "")}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">Transaction ID</span>
+            <span class="value">
+              ${escapeHtml(item.transactionId || "")}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">Status</span>
+            <span>
+              <span class="status ${statusClass}">
+                ${escapeHtml(status)}
+              </span>
+            </span>
+          </div>
+
+        `;
+
+
+        if(
+          status.toLowerCase() ===
+          "pending"
+        ){
+
+          const actions =
+          document.createElement(
+            "div"
+          );
+
+          actions.className =
+          "actions";
+
+
+          const approve =
+          document.createElement(
+            "button"
+          );
+
+          approve.className =
+          "btn green";
+
+          approve.innerText =
+          "APPROVE";
+
+
+          approve.onclick =
+          ()=>approveDeposit(
+            item.id,
+            item.userId,
+            Number(item.amount || 0)
+          );
+
+
+          const reject =
+          document.createElement(
+            "button"
+          );
+
+          reject.className =
+          "btn red";
+
+          reject.innerText =
+          "REJECT";
+
+
+          reject.onclick =
+          ()=>rejectDeposit(
+            item.id
+          );
+
+
+          actions.appendChild(
+            approve
+          );
+
+          actions.appendChild(
+            reject
+          );
+
+          div.appendChild(
+            actions
+          );
+
+        }
+
+
+        box.appendChild(
+          div
+        );
+
+      }
+    );
+
+
+    el("depositCount").innerText =
+    String(pendingCount);
+
+
+  }catch(error){
+
+    console.error(error);
+
+    box.innerHTML =
+    '<div class="empty">Could not load deposits.</div>';
+
+  }
+
+}
+
+
+/* =================================
+   APPROVE DEPOSIT
+================================= */
+
+async function approveDeposit(
+  requestId,
+  userId,
+  amount
+){
+
+  if(!confirm(
+    "Approve this deposit of Rs. "+
+    amount+
+    "?"
+  )){
+
+    return;
+  }
+
+
+  if(!userId || !amount){
+
+    toast(
+      "Invalid deposit request"
+    );
+
+    return;
+  }
+
+
+  try{
+
+    const userRef =
+    doc(
+      db,
+      "user",
+      userId
+    );
+
+
+    await updateDoc(
+
+      userRef,
+
+      {
+
+        Coin:
+        increment(amount),
+
+        "Total earning":
+        increment(amount)
+
+      }
+
+    );
+
+
+    const requestRef =
+    doc(
+      db,
+      "depositRequests",
+      requestId
+    );
+
+
+    await updateDoc(
+
+      requestRef,
+
+      {
+
+        status:
+        "Approved",
+
+        approvedAt:
+        new Date(),
+
+        approvedBy:
+        ADMIN_EMAIL
+
+      }
+
+    );
+
+
+    toast(
+      "Deposit approved"
+    );
+
+
+    await loadDashboard();
+
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Approval failed: "+
+      error.message
+    );
+
+  }
+
+}
+
+window.approveDeposit =
+approveDeposit;
+
+
+/* =================================
+   REJECT DEPOSIT
+================================= */
+
+async function rejectDeposit(
+  requestId
+){
+
+  if(!confirm(
+    "Reject this deposit request?"
+  )){
+
+    return;
+  }
+
+
+  try{
+
+    const requestRef =
+    doc(
+      db,
+      "depositRequests",
+      requestId
+    );
+
+
+    await updateDoc(
+
+      requestRef,
+
+      {
+
+        status:
+        "Rejected",
+
+        rejectedAt:
+        new Date(),
+
+        rejectedBy:
+        ADMIN_EMAIL
+
+      }
+
+    );
+
+
+    toast(
+      "Deposit rejected"
+    );
+
+
+    await loadDashboard();
+
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Reject failed: "+
+      error.message
+    );
+
+  }
+
+}
+
+window.rejectDeposit =
+rejectDeposit;
+
+
+/* =================================
+   WITHDRAWAL REQUESTS
+================================= */
+
+async function loadWithdrawalRequests(){
+
+  const box =
+  el("withdrawalList");
+
+
+  box.innerHTML =
+  '<div class="empty">Loading withdrawals...</div>';
+
+
+  try{
+
+    const snap =
+    await getDocs(
+
+      collection(
+        db,
+        "withdrawalRequests"
+      )
+
+    );
+
+
+    if(snap.empty){
+
+      box.innerHTML =
+      '<div class="empty">No withdrawal requests.</div>';
+
+      el("withdrawalCount").innerText =
+      "0";
+
+      return;
+    }
+
+
+    let requests=[];
+
+
+    snap.forEach(
+      item=>{
+
+        requests.push({
+
+          id:
+          item.id,
+
+          ...item.data()
+
+        });
+
+      }
+    );
+
+
+    requests.sort(
+
+      (a,b)=>
+
+      Number(
+        b.createdAtMs || 0
+      )
+      -
+      Number(
+        a.createdAtMs || 0
+      )
+
+    );
+
+
+    let pendingCount=0;
+
+
+    box.innerHTML =
+    "";
+
+
+    requests.forEach(
+      item=>{
+
+        const status =
+        String(
+          item.status ||
+          "Pending"
+        );
+
+
+        if(
+          status.toLowerCase() ===
+          "pending"
+        ){
+
+          pendingCount++;
+
+        }
+
+
+        const statusClass =
+        status.toLowerCase() ===
+        "paid"
+        ? "approved"
+
+        : status.toLowerCase() ===
+        "rejected"
+        ? "rejected"
+
+        : "pending";
+
+
+        const div =
+        document.createElement(
+          "div"
+        );
+
+
+        div.className =
+        "request";
+
+
+        div.innerHTML = `
+
+          <div class="request-title">
+            💸 Withdrawal Request
+          </div>
+
+          <div class="row">
+            <span class="label">Email</span>
+            <span class="value">
+              ${escapeHtml(item.email || "")}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">Amount</span>
+            <span class="value">
+              Rs. ${escapeHtml(item.amount || 0)}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">Method</span>
+            <span class="value">
+              ${escapeHtml(item.method || "")}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">Account Number</span>
+            <span class="value">
+              ${escapeHtml(item.receiverNumber || "")}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">Status</span>
+            <span>
+              <span class="status ${statusClass}">
+                ${escapeHtml(status)}
+              </span>
+            </span>
+          </div>
+
+        `;
+
+
+        if(
+          status.toLowerCase() ===
+          "pending"
+        ){
+
+          const actions =
+          document.createElement(
+            "div"
+          );
+
+          actions.className =
+          "actions";
+
+
+          const paid =
+          document.createElement(
+            "button"
+          );
+
+          paid.className =
+          "btn green";
+
+          paid.innerText =
+          "MARK PAID";
+
+
+          paid.onclick =
+          ()=>markWithdrawalPaid(
+            item.id
+          );
+
+
+          const reject =
+          document.createElement(
+            "button"
+          );
+
+          reject.className =
+          "btn red";
+
+          reject.innerText =
+          "REJECT";
+
+
+          reject.onclick =
+          ()=>rejectWithdrawal(
+            item.id
+          );
+
+
+          actions.appendChild(
+            paid
+          );
+
+          actions.appendChild(
+            reject
+          );
+
+
+          div.appendChild(
+            actions
+          );
+
+        }
+
+
+        box.appendChild(
+          div
+        );
+
+      }
+    );
+
+
+    el("withdrawalCount").innerText =
+    String(pendingCount);
+
+
+  }catch(error){
+
+    console.error(error);
+
+    box.innerHTML =
+    '<div class="empty">Could not load withdrawals.</div>';
+
+  }
+
+}
+
+
+/* =================================
+   MARK WITHDRAWAL PAID
+================================= */
+
+async function markWithdrawalPaid(
+  requestId
+){
+
+  if(!confirm(
+    "Have you actually sent this payment? Mark as PAID?"
+  )){
+
+    return;
+  }
+
+
+  try{
+
+    const requestRef =
+    doc(
+      db,
+      "withdrawalRequests",
+      requestId
+    );
+
+
+    await updateDoc(
+
+      requestRef,
+
+      {
+
+        status:
+        "Paid",
+
+        paidAt:
+        new Date(),
+
+        paidBy:
+        ADMIN_EMAIL
+
+      }
+
+    );
+
+
+    toast(
+      "Withdrawal marked as Paid"
+    );
+
+
+    await loadDashboard();
+
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Could not mark Paid: "+
+      error.message
+    );
+
+  }
+
+}
+
+window.markWithdrawalPaid =
+markWithdrawalPaid;
+
+
+/* =================================
+   REJECT WITHDRAWAL
+================================= */
+
+async function rejectWithdrawal(
+  requestId
+){
+
+  if(!confirm(
+    "Reject this withdrawal request?"
+  )){
+
+    return;
+  }
+
+
+  try{
+
+    const requestRef =
+    doc(
+      db,
+      "withdrawalRequests",
+      requestId
+    );
+
+
+    await updateDoc(
+
+      requestRef,
+
+      {
+
+        status:
+        "Rejected",
+
+        rejectedAt:
+        new Date(),
+
+        rejectedBy:
+        ADMIN_EMAIL
+
+      }
+
+    );
+
+
+    toast(
+      "Withdrawal rejected"
+    );
+
+
+    await loadDashboard();
+
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Could not reject withdrawal: "+
+      error.message
+    );
+
+  }
+
+}
+
+window.rejectWithdrawal =
+rejectWithdrawal;
+
+
+/* =================================
+   USERS
+================================= */
+
+async function loadUsers(){
+
+  const box =
+  el("userList");
+
+
+  box.innerHTML =
+  '<div class="empty">Loading users...</div>';
+
+
+  try{
+
+    const snap =
+    await getDocs(
+      collection(
+        db,
+        "user"
+      )
+    );
+
+
+    if(snap.empty){
+
+      box.innerHTML =
+      '<div class="empty">No users found.</div>';
+
+      el("userCount").innerText =
+      "0";
+
+      return;
+    }
+
+
+    el("userCount").innerText =
+    String(snap.size);
+
+
+    box.innerHTML =
+    "";
+
+
+    snap.forEach(
+      item=>{
+
+        const d =
+        item.data();
+
+
+        const div =
+        document.createElement(
+          "div"
+        );
+
+
+        div.className =
+        "request";
+
+
+        div.innerHTML = `
+
+          <div class="request-title">
+            👤 User
+          </div>
+
+          <div class="row">
+            <span class="label">Email</span>
+            <span class="value">
+              ${escapeHtml(d.Email || "")}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">Balance</span>
+            <span class="value">
+              Rs. ${escapeHtml(d.Coin || 0)}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">Hens</span>
+            <span class="value">
+              ${escapeHtml(d.hens || 0)}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">Eggs</span>
+            <span class="value">
+              ${escapeHtml(d.eggs || 0)}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">Total Earning</span>
+            <span class="value">
+              Rs. ${escapeHtml(d["Total earning"] || 0)}
+            </span>
+          </div>
+
+        `;
+
+
+        box.appendChild(
+          div
+        );
+
+      }
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+    box.innerHTML =
+    '<div class="empty">Could not load users.</div>';
+
+  }
+
+}
+
+window.loadUsers =
+loadUsers;
+
+
+/* =================================
+   REFRESH
+================================= */
+
+async function refreshAdmin(){
+
+  toast(
+    "Refreshing..."
+  );
+
+  await loadDashboard();
+
+  toast(
+    "Dashboard refreshed"
+  );
+
+}
+
+window.refreshAdmin =
+refreshAdmin;
+
+
+/* =================================
+   LOGOUT
+================================= */
+
+async function adminLogout(){
+
+  try{
+
+    await signOut(auth);
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+
+}
+
+window.adminLogout =
+adminLogout;
+
+</script>
+
+</head>
+
+
+<body>
+
+
+<!-- =================================
+     ADMIN LOGIN
+================================= -->
+
+<div
+id="loginScreen"
+>
+
+  <div class="login-box">
+
+    <div class="logo">
+      🐔
+    </div>
+
+    <h1>
+      GOLDEN HEN
+    </h1>
+
+    <div class="notice">
+      Admin Panel
+    </div>
+
+
+    <input
+      id="adminEmail"
+      class="input"
+      type="email"
+      value="ka231358@gmail.com"
+      placeholder="Admin Email"
+    >
+
+
+    <input
+      id="adminPassword"
+      class="input"
+      type="password"
+      placeholder="Admin Password"
+    >
+
+
+    <button
+      class="btn"
+      onclick="adminLogin()"
+    >
+      ADMIN LOGIN
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =================================
+     ADMIN APP
+================================= -->
+
+<div
+id="adminApp"
+>
+
+
+<div class="topbar">
+
+  <div class="topbar-inner">
+
+    <div class="brand">
+      🐔 Golden Hen Admin
+    </div>
+
+    <div
+      id="adminEmailText"
+      class="admin-email"
+    >
+      Admin
+    </div>
+
+  </div>
+
+</div>
+
+
+<div class="container">
+
+
+  <div class="heading">
+    Admin Dashboard
+  </div>
+
+
+  <!-- STATS -->
+
+  <div class="stats">
+
+
+    <div class="stat">
+
+      <div
+        id="depositCount"
+        class="stat-number"
+      >
+        0
+      </div>
+
+      <div class="stat-label">
+        PENDING DEPOSITS
+      </div>
+
+    </div>
+
+
+    <div class="stat">
+
+      <div
+        id="withdrawalCount"
+        class="stat-number"
+      >
+        0
+      </div>
+
+      <div class="stat-label">
+        PENDING WITHDRAWALS
+      </div>
+
+    </div>
+
+
+    <div class="stat">
+
+      <div
+        id="userCount"
+        class="stat-number"
+      >
+        0
+      </div>
+
+      <div class="stat-label">
+        USERS
+      </div>
+
+    </div>
+
+
+  </div>
+
+
+  <!-- REFRESH / LOGOUT -->
+
+  <div class="card">
+
+    <button
+      class="btn"
+      onclick="refreshAdmin()"
+    >
+      🔄 REFRESH DASHBOARD
+    </button>
+
+
+    <button
+      class="btn secondary"
+      onclick="adminLogout()"
+    >
+      LOGOUT
+    </button>
+
+  </div>
+
+
+  <!-- DEPOSITS -->
+
+  <div class="card">
+
+    <h2>
+      💰 Deposit Requests
+    </h2>
+
+
+    <div class="notice"
+         style="margin-top:10px;">
+
+      Verify the actual payment and
+      transaction ID before approving
+      a deposit.
+
+    </div>
+
+
+    <div
+      id="depositList"
+    >
+
+      <div class="empty">
+        Loading...
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- WITHDRAWALS -->
+
+  <div class="card">
+
+    <h2>
+      💸 Withdrawal Requests
+    </h2>
+
+
+    <div class="notice"
+         style="margin-top:10px;">
+
+      Send the payment to the user's
+      listed account first. Only then
+      use MARK PAID.
+
+    </div>
+
+
+    <div
+      id="withdrawalList"
+    >
+
+      <div class="empty">
+        Loading...
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- USERS -->
+
+  <div class="card">
+
+    <h2>
+      👥 Users
+    </h2>
+
+
+    <div
+      id="userList"
+    >
+
+      <div class="empty">
+        Loading...
+      </div>
+
+    </div>
+
+  </div>
+
+
+</div>
+
+</div>
+
+
+<div
+id="toast"
+class="toast"
+>
+Message
+</div>
+
+
+</body>
+</html>
