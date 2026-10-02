@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Golden Hen Admin Panel</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:#0b0b0b;
+  color:#fff;
+}
+
+header{
+  background:linear-gradient(135deg,#111,#2a2100);
+  padding:18px;
+  text-align:center;
+  border-bottom:1px solid #d4af37;
+}
+
+header h1{
+  color:#ffd700;
+  font-size:24px;
+}
+
+header p{
+  color:#aaa;
+  margin-top:5px;
+  font-size:13px;
+}
+
+.container{
+  width:100%;
+  max-width:1100px;
+  margin:auto;
+  padding:15px;
+}
+
+.login-box,
+.panel{
+  background:#151515;
+  border:1px solid #333;
+  border-radius:15px;
+  padding:20px;
+  margin-top:20px;
+}
+
+h2{
+  color:#ffd700;
+  margin-bottom:15px;
+}
+
+input,
+select{
+  width:100%;
+  padding:13px;
+  margin:7px 0;
+  border-radius:8px;
+  border:1px solid #444;
+  background:#0d0d0d;
+  color:#fff;
+  outline:none;
+}
+
+button{
+  border:0;
+  border-radius:8px;
+  padding:12px 16px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.login-btn,
+.approve{
+  background:#ffd700;
+  color:#000;
+}
+
+.reject{
+  background:#c62828;
+  color:#fff;
+}
+
+.refresh{
+  background:#333;
+  color:#fff;
+}
+
+.logout{
+  background:#555;
+  color:#fff;
+}
+
+.hidden{
+  display:none !important;
+}
+
+.card{
+  background:#101010;
+  border:1px solid #333;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:12px;
+}
+
+.card.pending{
+  border-color:#ffd700;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:5px 0;
+  border-bottom:1px solid #222;
+}
+
+.label{
+  color:#999;
+}
+
+.value{
+  color:#fff;
+  text-align:right;
+  word-break:break-word;
+}
+
+.amount{
+  color:#00e676;
+  font-size:20px;
+  font-weight:bold;
+}
+
+.status{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:12px;
+  background:#333;
+}
+
+.status.pending{
+  color:#ffd700;
+}
+
+.status.approved{
+  color:#00e676;
+}
+
+.status.rejected{
+  color:#ff5252;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+
+.actions button{
+  flex:1;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.stat{
+  background:#151515;
+  border:1px solid #333;
+  border-radius:12px;
+  padding:15px;
+  text-align:center;
+}
+
+.stat strong{
+  display:block;
+  color:#ffd700;
+  font-size:22px;
+  margin-top:5px;
+}
+
+.empty{
+  text-align:center;
+  color:#888;
+  padding:30px;
+}
+
+.toast{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#222;
+  border:1px solid #ffd700;
+  color:#fff;
+  padding:12px 18px;
+  border-radius:10px;
+  display:none;
+  z-index:9999;
+  max-width:90%;
+  text-align:center;
+}
+
+@media(max-width:600px){
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .row{
+    flex-direction:column;
+  }
+
+  .value{
+    text-align:left;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🐔 GOLDEN HEN ADMIN</h1>
+  <p>Deposit • Withdraw • Users</p>
+</header>
+
+<div class="container">
+
+<!-- LOGIN -->
+<div id="loginBox" class="login-box">
+
+  <h2>ADMIN LOGIN</h2>
+
+  <input
+    type="email"
+    id="adminEmail"
+    placeholder="Admin Email"
+  >
+
+  <input
+    type="password"
+    id="adminPassword"
+    placeholder="Password"
+  >
+
+  <button class="login-btn" style="width:100%" onclick="adminLogin()">
+    LOGIN
+  </button>
+
+</div>
+
+
+<!-- ADMIN -->
+<div id="adminPanel" class="hidden">
+
+  <div class="panel">
+
+    <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+      <h2>Dashboard</h2>
+
+      <div>
+        <button class="refresh" onclick="loadAll()">
+          🔄 REFRESH
+        </button>
+
+        <button class="logout" onclick="adminLogout()">
+          LOGOUT
+        </button>
+      </div>
+    </div>
+
+    <div class="stats">
+
+      <div class="stat">
+        Deposits
+        <strong id="depositCount">0</strong>
+      </div>
+
+      <div class="stat">
+        Withdrawals
+        <strong id="withdrawCount">0</strong>
+      </div>
+
+      <div class="stat">
+        Users
+        <strong id="userCount">0</strong>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- DEPOSITS -->
+  <div class="panel">
+
+    <h2>💰 DEPOSIT REQUESTS</h2>
+
+    <div id="depositList">
+      <div class="empty">Loading deposits...</div>
+    </div>
+
+  </div>
+
+
+  <!-- WITHDRAWALS -->
+  <div class="panel">
+
+    <h2>💸 WITHDRAW REQUESTS</h2>
+
+    <div id="withdrawList">
+      <div class="empty">Loading withdrawals...</div>
+    </div>
+
+  </div>
+
+
+  <!-- USERS -->
+  <div class="panel">
+
+    <h2>👥 USERS</h2>
+
+    <div id="userList">
+      <div class="empty">Loading users...</div>
+    </div>
+
+  </div>
+
+</div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+
+<script type="module">
+
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  getDoc,
+  doc,
+  updateDoc,
+  increment,
+  writeBatch,
+  query,
+  orderBy
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+/* =========================
+   FIREBASE CONFIG
+========================= */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD-uhTjZklnHdeOXMyR_gRiAWXyqIwAuFk",
+  authDomain: "earn-app-8f00d.firebaseapp.com",
+  projectId: "earn-app-8f00d",
+  storageBucket: "earn-app-8f00d.firebasestorage.app",
+  messagingSenderId: "864949482951",
+  appId: "1:864949482951:web:1ce6dd7fe2b911ecea55e2",
+  measurementId: "G-MBV2HQ0H49"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+
+/* =========================
+   ADMIN
+========================= */
+
+const ADMIN_EMAIL = "ka231358@gmail.com";
+
+
+/* =========================
+   TOAST
+========================= */
+
+function toast(message){
+
+  const box = document.getElementById("toast");
+
+  box.innerText = message;
+
+  box.style.display = "block";
+
+  setTimeout(()=>{
+    box.style.display = "none";
+  },3000);
+}
+
+
+/* =========================
+   FIELD HELPERS
+   Supports OLD + NEW
+========================= */
+
+function getEmail(item){
+  return item.Email || item.email || "";
+}
+
+function getAmount(item){
+
+  const value =
+    item.Amount ??
+    item.amount ??
+    item.Coin ??
+    item.coin ??
+    0;
+
+  return Number(value) || 0;
+}
+
+function getUID(item){
+
+  return (
+    item.uid ||
+    item.userId ||
+    item.UID ||
+    ""
+  );
+}
+
+function getTransactionID(item){
+
+  return (
+    item.TransactionID ||
+    item.transactionId ||
+    item.transactionID ||
+    ""
+  );
+}
+
+function getNumber(item){
+
+  return (
+    item.Num ||
+    item.number ||
+    item.receiverNumber ||
+    ""
+  );
+}
+
+function getMethod(item){
+
+  return (
+    item.Method ||
+    item.method ||
+    "JazzCash / EasyPaisa"
+  );
+}
+
+function getStatus(item){
+
+  return String(
+    item.Status ||
+    item.status ||
+    "Pending"
+  );
+}
+
+
+/* =========================
+   DATE
+========================= */
+
+function getDate(item){
+
+  const value =
+    item.CreatedAt ||
+    item.createdAt ||
+    item.approvedAt ||
+    item.rejectedAt;
+
+  if(!value) return "-";
+
+  try{
+
+    if(value.toDate){
+      return value.toDate().toLocaleString();
+    }
+
+    if(value.seconds){
+      return new Date(
+        value.seconds * 1000
+      ).toLocaleString();
+    }
+
+    return new Date(value).toLocaleString();
+
+  }catch(e){
+
+    return "-";
+  }
+}
+
+
+/* =========================
+   LOGIN
+========================= */
+
+window.adminLogin = async function(){
+
+  const email =
+    document.getElementById("adminEmail").value.trim();
+
+  const password =
+    document.getElementById("adminPassword").value;
+
+  if(!email || !password){
+
+    toast("Email aur password enter karein");
+
+    return;
+  }
+
+  if(email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()){
+
+    toast("Admin email allowed nahi hai");
+
+    return;
+  }
+
+  try{
+
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Login failed: " +
+      (error.code || error.message)
+    );
+  }
+};
+
+
+/* =========================
+   AUTH STATE
+========================= */
+
+onAuthStateChanged(auth, async(user)=>{
+
+  if(user && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()){
+
+    document
+      .getElementById("loginBox")
+      .classList.add("hidden");
+
+    document
+      .getElementById("adminPanel")
+      .classList.remove("hidden");
+
+    await loadAll();
+
+  }else{
+
+    if(user){
+
+      await signOut(auth);
+
+      toast("Sirf admin account allowed hai");
+    }
+
+    document
+      .getElementById("loginBox")
+      .classList.remove("hidden");
+
+    document
+      .getElementById("adminPanel")
+      .classList.add("hidden");
+  }
+
+});
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+window.adminLogout = async function(){
+
+  await signOut(auth);
+
+  toast("Logged out");
+};
+
+
+/* =========================
+   LOAD ALL
+========================= */
+
+window.loadAll = async function(){
+
+  await loadDeposits();
+
+  await loadWithdrawals();
+
+  await loadUsers();
+};
+
+
+/* =========================
+   DEPOSITS
+========================= */
+
+async function loadDeposits(){
+
+  const box =
+    document.getElementById("depositList");
+
+  box.innerHTML =
+    '<div class="empty">Loading...</div>';
+
+  try{
+
+    const snap =
+      await getDocs(
+        collection(db,"depositRequests")
+      );
+
+    document.getElementById("depositCount").innerText =
+      snap.size;
+
+    if(snap.empty){
+
+      box.innerHTML =
+        '<div class="empty">No deposit requests</div>';
+
+      return;
+    }
+
+    const items = [];
+
+    snap.forEach(d=>{
+
+      items.push({
+        id:d.id,
+        ...d.data()
+      });
+
+    });
+
+    /* newest first */
+    items.reverse();
+
+    box.innerHTML = "";
+
+    items.forEach(item=>{
+
+      const amount =
+        getAmount(item);
+
+      const uid =
+        getUID(item);
+
+      const email =
+        getEmail(item);
+
+      const transaction =
+        getTransactionID(item);
+
+      const number =
+        getNumber(item);
+
+      const method =
+        getMethod(item);
+
+      const status =
+        getStatus(item);
+
+      const card =
+        document.createElement("div");
+
+      card.className =
+        "card " +
+        (
+          status.toLowerCase() === "pending"
+          ? "pending"
+          : ""
+        );
+
+      card.innerHTML = `
+
+        <div class="row">
+          <span class="label">Amount</span>
+          <span class="value amount">
+            Rs. ${amount}
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">Email</span>
+          <span class="value">
+            ${escapeHTML(email)}
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">UID</span>
+          <span class="value">
+            ${escapeHTML(uid)}
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">Transaction ID</span>
+          <span class="value">
+            ${escapeHTML(transaction)}
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">Number</span>
+          <span class="value">
+            ${escapeHTML(number)}
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">Method</span>
+          <span class="value">
+            ${escapeHTML(method)}
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">Date</span>
+          <span class="value">
+            ${getDate(item)}
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">Status</span>
+          <span class="value">
+            <span class="status ${status.toLowerCase()}">
+              ${escapeHTML(status)}
+            </span>
+          </span>
+        </div>
+
+      `;
+
+      if(
+        status.toLowerCase() === "pending"
+      ){
+
+        const actions =
+          document.createElement("div");
+
+        actions.className =
+          "actions";
+
+        const approve =
+          document.createElement("button");
+
+        approve.className =
+          "approve";
+
+        approve.innerText =
+          "✅ APPROVE";
+
+        approve.onclick =
+          ()=>approveDeposit(item.id);
+
+
+        const reject =
+          document.createElement("button");
+
+        reject.className =
+          "reject";
+
+        reject.innerText =
+          "❌ REJECT";
+
+        reject.onclick =
+          ()=>rejectDeposit(item.id);
+
+
+        actions.appendChild(approve);
+
+        actions.appendChild(reject);
+
+        card.appendChild(actions);
+      }
+
+      box.appendChild(card);
+
+    });
+
+  }catch(error){
+
+    console.error(error);
+
+    box.innerHTML =
+      '<div class="empty">Error loading deposits</div>';
+
+    toast("Deposits load nahi huay");
+  }
+}
+
+
+/* =========================
+   APPROVE DEPOSIT
+========================= */
+
+async function approveDeposit(requestId){
+
+  if(!confirm(
+    "Is deposit ko APPROVE karna hai?"
+  )){
+    return;
+  }
+
+  try{
+
+    /* IMPORTANT:
+       Fresh document read
+       so UID + Amount never become 0
+    */
+
+    const requestRef =
+      doc(
+        db,
+        "depositRequests",
+        requestId
+      );
+
+    const requestSnap =
+      await getDoc(requestRef);
+
+    if(!requestSnap.exists()){
+
+      toast("Deposit request nahi mili");
+
+      return;
+    }
+
+    const data =
+      requestSnap.data();
+
+    const uid =
+      getUID(data);
+
+    const amount =
+      getAmount(data);
+
+    const status =
+      getStatus(data);
+
+    console.log(
+      "APPROVE DATA:",
+      {
+        requestId,
+        uid,
+        amount,
+        status,
+        data
+      }
+    );
+
+
+    if(!uid){
+
+      toast(
+        "Invalid deposit: UID missing"
+      );
+
+      return;
+    }
+
+
+    if(!amount || amount <= 0){
+
+      toast(
+        "Invalid deposit: Amount 0 hai"
+      );
+
+      return;
+    }
+
+
+    if(
+      status.toLowerCase() !== "pending"
+    ){
+
+      toast(
+        "Ye deposit already process ho chuka hai"
+      );
+
+      return;
+    }
+
+
+    /* USER DOCUMENT */
+
+    const userRef =
+      doc(
+        db,
+        "user",
+        uid
+      );
+
+    const userSnap =
+      await getDoc(userRef);
+
+    if(!userSnap.exists()){
+
+      toast(
+        "User document nahi mila"
+      );
+
+      return;
+    }
+
+
+    /* ATOMIC UPDATE */
+
+    const batch =
+      writeBatch(db);
+
+
+    batch.update(
+      userRef,
+      {
+        Coin: increment(amount),
+
+        "Total earning":
+          increment(amount)
+      }
+    );
+
+
+    batch.update(
+      requestRef,
+      {
+        Status:"Approved",
+
+        status:"Approved",
+
+        approvedAt:new Date(),
+
+        approvedBy:ADMIN_EMAIL
+      }
+    );
+
+
+    await batch.commit();
+
+
+    toast(
+      "Deposit approved! Rs. " +
+      amount +
+      " user balance mein add ho gaya."
+    );
+
+
+    await loadAll();
+
+  }catch(error){
+
+    console.error(
+      "APPROVE ERROR:",
+      error
+    );
+
+    toast(
+      "Approve failed: " +
+      (error.code || error.message)
+    );
+  }
+}
+
+
+/* =========================
+   REJECT DEPOSIT
+========================= */
+
+async function rejectDeposit(requestId){
+
+  if(!confirm(
+    "Is deposit ko REJECT karna hai?"
+  )){
+    return;
+  }
+
+  try{
+
+    const requestRef =
+      doc(
+        db,
+        "depositRequests",
+        requestId
+      );
+
+    const snap =
+      await getDoc(requestRef);
+
+    if(!snap.exists()){
+
+      toast("Request nahi mili");
+
+      return;
+    }
+
+    const data =
+      snap.data();
+
+    const status =
+      getStatus(data);
+
+    if(
+      status.toLowerCase() !== "pending"
+    ){
+
+      toast("Already processed");
+
+      return;
+    }
+
+    await updateDoc(
+      requestRef,
+      {
+        Status:"Rejected",
+
+        status:"Rejected",
+
+        rejectedAt:new Date(),
+
+        rejectedBy:ADMIN_EMAIL
+      }
+    );
+
+    toast("Deposit rejected");
+
+    await loadDeposits();
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Reject failed: " +
+      (error.code || error.message)
+    );
+  }
+}
+
+
+/* =========================
+   WITHDRAWALS
+========================= */
+
+async function loadWithdrawals(){
+
+  const box =
+    document.getElementById("withdrawList");
+
+  box.innerHTML =
+    '<div class="empty">Loading...</div>';
+
+  try{
+
+    const snap =
+      await getDocs(
+        collection(db,"withdrawalRequests")
+      );
+
+    document.getElementById("withdrawCount").innerText =
+      snap.size;
+
+    if(snap.empty){
+
+      box.innerHTML =
+        '<div class="empty">No withdrawal requests</div>';
+
+      return;
+    }
+
+    const items=[];
+
+    snap.forEach(d=>{
+
+      items.push({
+        id:d.id,
+        ...d.data()
+      });
+
+    });
+
+    items.reverse();
+
+    box.innerHTML="";
+
+    items.forEach(item=>{
+
+      const amount =
+        getAmount(item);
+
+      const uid =
+        getUID(item);
+
+      const email =
+        getEmail(item);
+
+      const number =
+        getNumber(item);
+
+      const method =
+        getMethod(item);
+
+      const status =
+        getStatus(item);
+
+      const card =
+        document.createElement("div");
+
+      card.className="card";
+
+      card.innerHTML=`
+
+        <div class="row">
+          <span class="label">Amount</span>
+          <span class="value amount">
+            Rs. ${amount}
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">Email</span>
+          <span class="value">
+            ${escapeHTML(email)}
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">UID</span>
+          <span class="value">
+            ${escapeHTML(uid)}
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">Number</span>
+          <span class="value">
+            ${escapeHTML(number)}
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">Method</span>
+          <span class="value">
+            ${escapeHTML(method)}
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">Status</span>
+          <span class="value">
+            <span class="status ${status.toLowerCase()}">
+              ${escapeHTML(status)}
+            </span>
+          </span>
+        </div>
+
+      `;
+
+      if(
+        status.toLowerCase()==="pending"
+      ){
+
+        const actions =
+          document.createElement("div");
+
+        actions.className="actions";
+
+
+        const approve =
+          document.createElement("button");
+
+        approve.className="approve";
+
+        approve.innerText="✅ MARK PAID";
+
+        approve.onclick =
+          ()=>approveWithdrawal(item.id);
+
+
+        const reject =
+          document.createElement("button");
+
+        reject.className="reject";
+
+        reject.innerText="❌ REJECT";
+
+        reject.onclick =
+          ()=>rejectWithdrawal(item.id);
+
+
+        actions.appendChild(approve);
+
+        actions.appendChild(reject);
+
+        card.appendChild(actions);
+      }
+
+      box.appendChild(card);
+
+    });
+
+  }catch(error){
+
+    console.error(error);
+
+    box.innerHTML =
+      '<div class="empty">Error loading withdrawals</div>';
+  }
+}
+
+
+/* =========================
+   APPROVE WITHDRAWAL
+========================= */
+
+async function approveWithdrawal(id){
+
+  if(!confirm(
+    "Withdrawal ko MARK PAID karna hai?"
+  )){
+    return;
+  }
+
+  try{
+
+    const ref =
+      doc(
+        db,
+        "withdrawalRequests",
+        id
+      );
+
+    const snap =
+      await getDoc(ref);
+
+    if(!snap.exists()){
+
+      toast("Withdrawal nahi mili");
+
+      return;
+    }
+
+    const data =
+      snap.data();
+
+    if(
+      getStatus(data).toLowerCase() !==
+      "pending"
+    ){
+
+      toast("Already processed");
+
+      return;
+    }
+
+    await updateDoc(
+      ref,
+      {
+        Status:"Paid",
+
+        status:"Paid",
+
+        paidAt:new Date(),
+
+        paidBy:ADMIN_EMAIL
+      }
+    );
+
+    toast("Withdrawal marked as paid");
+
+    await loadWithdrawals();
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Failed: " +
+      (error.code || error.message)
+    );
+  }
+}
+
+
+/* =========================
+   REJECT WITHDRAWAL
+========================= */
+
+async function rejectWithdrawal(id){
+
+  if(!confirm(
+    "Withdrawal reject karna hai?"
+  )){
+    return;
+  }
+
+  try{
+
+    const ref =
+      doc(
+        db,
+        "withdrawalRequests",
+        id
+      );
+
+    await updateDoc(
+      ref,
+      {
+        Status:"Rejected",
+
+        status:"Rejected",
+
+        rejectedAt:new Date(),
+
+        rejectedBy:ADMIN_EMAIL
+      }
+    );
+
+    toast("Withdrawal rejected");
+
+    await loadWithdrawals();
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      "Failed: " +
+      (error.code || error.message)
+    );
+  }
+}
+
+
+/* =========================
+   USERS
+========================= */
+
+async function loadUsers(){
+
+  const box =
+    document.getElementById("userList");
+
+  box.innerHTML =
+    '<div class="empty">Loading...</div>';
+
+  try{
+
+    const snap =
+      await getDocs(
+        collection(db,"user")
+      );
+
+    document.getElementById("userCount").innerText =
+      snap.size;
+
+    if(snap.empty){
+
+      box.innerHTML =
+        '<div class="empty">No users found</div>';
+
+      return;
+    }
+
+    box.innerHTML="";
+
+    snap.forEach(d=>{
+
+      const data =
+        d.data();
+
+      const email =
+        data.Email ||
+        data.email ||
+        "No email";
+
+      const coin =
+        Number(
+          data.Coin ||
+          data.coin ||
+          0
+        );
+
+      const hens =
+        Number(
+          data.hens ||
+          data.Hens ||
+          0
+        );
+
+      const eggs =
+        Number(
+          data.eggs ||
+          data.Eggs ||
+          0
+        );
+
+      const total =
+        Number(
+          data["Total earning"] ||
+          data.totalEarned ||
+          0
+        );
+
+
+      const card =
+        document.createElement("div");
+
+      card.className="card";
+
+      card.innerHTML=`
+
+        <div class="row">
+          <span class="label">Email</span>
+          <span class="value">
+            ${escapeHTML(email)}
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">UID</span>
+          <span class="value">
+            ${escapeHTML(d.id)}
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">Balance</span>
+          <span class="value amount">
+            Rs. ${coin}
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">Hens</span>
+          <span class="value">
+            ${hens}
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">Eggs</span>
+          <span class="value">
+            ${eggs}
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">Total Earning</span>
+          <span class="value">
+            Rs. ${total}
+          </span>
+        </div>
+
+      `;
+
+      box.appendChild(card);
+
+    });
+
+  }catch(error){
+
+    console.error(error);
+
+    box.innerHTML =
+      '<div class="empty">Error loading users</div>';
+  }
+}
+
+
+/* =========================
+   HTML SECURITY
+========================= */
+
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+</script>
+
+</body>
+</html>
+```
