@@ -14,13 +14,13 @@
 
 body{
   font-family:Arial,sans-serif;
-  background:#0b0b0b;
+  background:#090909;
   color:#fff;
 }
 
 header{
-  background:linear-gradient(135deg,#111,#2a2100);
-  padding:18px;
+  background:linear-gradient(135deg,#111,#302500);
+  padding:20px 15px;
   text-align:center;
   border-bottom:1px solid #d4af37;
 }
@@ -32,7 +32,7 @@ header h1{
 
 header p{
   color:#aaa;
-  margin-top:5px;
+  margin-top:6px;
   font-size:13px;
 }
 
@@ -49,7 +49,7 @@ header p{
   border:1px solid #333;
   border-radius:15px;
   padding:20px;
-  margin-top:20px;
+  margin-top:18px;
 }
 
 h2{
@@ -57,16 +57,16 @@ h2{
   margin-bottom:15px;
 }
 
-input,
-select{
+input{
   width:100%;
-  padding:13px;
+  padding:14px;
   margin:7px 0;
   border-radius:8px;
   border:1px solid #444;
   background:#0d0d0d;
   color:#fff;
   outline:none;
+  font-size:15px;
 }
 
 button{
@@ -75,6 +75,7 @@ button{
   padding:12px 16px;
   cursor:pointer;
   font-weight:bold;
+  font-size:14px;
 }
 
 .login-btn,
@@ -99,7 +100,35 @@ button{
 }
 
 .hidden{
-  display:none !important;
+  display:none!important;
+}
+
+.top-buttons{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:15px;
+}
+
+.stat{
+  background:#101010;
+  border:1px solid #333;
+  border-radius:12px;
+  padding:15px;
+  text-align:center;
+}
+
+.stat strong{
+  display:block;
+  color:#ffd700;
+  font-size:23px;
+  margin-top:7px;
 }
 
 .card{
@@ -117,8 +146,8 @@ button{
 .row{
   display:flex;
   justify-content:space-between;
-  gap:10px;
-  padding:5px 0;
+  gap:12px;
+  padding:8px 0;
   border-bottom:1px solid #222;
 }
 
@@ -140,7 +169,7 @@ button{
 
 .status{
   display:inline-block;
-  padding:5px 9px;
+  padding:5px 10px;
   border-radius:20px;
   font-size:12px;
   background:#333;
@@ -150,7 +179,8 @@ button{
   color:#ffd700;
 }
 
-.status.approved{
+.status.approved,
+.status.paid{
   color:#00e676;
 }
 
@@ -161,39 +191,27 @@ button{
 .actions{
   display:flex;
   gap:8px;
-  margin-top:12px;
+  margin-top:14px;
 }
 
 .actions button{
   flex:1;
 }
 
-.stats{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  margin-bottom:20px;
-}
-
-.stat{
-  background:#151515;
-  border:1px solid #333;
-  border-radius:12px;
-  padding:15px;
-  text-align:center;
-}
-
-.stat strong{
-  display:block;
-  color:#ffd700;
-  font-size:22px;
-  margin-top:5px;
-}
-
 .empty{
   text-align:center;
   color:#888;
-  padding:30px;
+  padding:30px 10px;
+}
+
+.info{
+  background:#0d0d0d;
+  border:1px solid #333;
+  border-radius:10px;
+  padding:12px;
+  color:#aaa;
+  font-size:13px;
+  margin-top:12px;
 }
 
 .toast{
@@ -204,15 +222,20 @@ button{
   background:#222;
   border:1px solid #ffd700;
   color:#fff;
-  padding:12px 18px;
+  padding:13px 18px;
   border-radius:10px;
   display:none;
   z-index:9999;
-  max-width:90%;
+  max-width:92%;
   text-align:center;
 }
 
+.loading{
+  color:#ffd700;
+}
+
 @media(max-width:600px){
+
   .stats{
     grid-template-columns:1fr;
   }
@@ -223,6 +246,14 @@ button{
 
   .value{
     text-align:left;
+  }
+
+  .top-buttons{
+    width:100%;
+  }
+
+  .top-buttons button{
+    flex:1;
   }
 }
 </style>
@@ -237,47 +268,75 @@ button{
 
 <div class="container">
 
-<!-- LOGIN -->
+<!-- =========================
+     LOGIN
+========================= -->
+
 <div id="loginBox" class="login-box">
 
-  <h2>ADMIN LOGIN</h2>
+  <h2>🔐 ADMIN LOGIN</h2>
 
   <input
     type="email"
     id="adminEmail"
     placeholder="Admin Email"
+    autocomplete="username"
   >
 
   <input
     type="password"
     id="adminPassword"
-    placeholder="Password"
+    placeholder="Admin Password"
+    autocomplete="current-password"
   >
 
-  <button class="login-btn" style="width:100%" onclick="adminLogin()">
+  <button
+    class="login-btn"
+    style="width:100%;"
+    onclick="adminLogin()"
+  >
     LOGIN
   </button>
+
+  <div class="info">
+    Admin email: bharamshills76@gmail.com
+  </div>
 
 </div>
 
 
-<!-- ADMIN -->
+<!-- =========================
+     ADMIN PANEL
+========================= -->
+
 <div id="adminPanel" class="hidden">
+
+  <!-- DASHBOARD -->
 
   <div class="panel">
 
-    <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;">
-      <h2>Dashboard</h2>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
 
-      <div>
-        <button class="refresh" onclick="loadAll()">
+      <h2 style="margin:0;">📊 DASHBOARD</h2>
+
+      <div class="top-buttons">
+
+        <button
+          class="refresh"
+          onclick="loadAll()"
+        >
           🔄 REFRESH
         </button>
 
-        <button class="logout" onclick="adminLogout()">
+        <button
+          class="logout"
+          onclick="adminLogout()"
+        >
           LOGOUT
         </button>
+
       </div>
+
     </div>
 
     <div class="stats">
@@ -302,37 +361,52 @@ button{
   </div>
 
 
-  <!-- DEPOSITS -->
+  <!-- =========================
+       DEPOSITS
+  ========================= -->
+
   <div class="panel">
 
     <h2>💰 DEPOSIT REQUESTS</h2>
 
     <div id="depositList">
-      <div class="empty">Loading deposits...</div>
+      <div class="empty loading">
+        Login to load deposits...
+      </div>
     </div>
 
   </div>
 
 
-  <!-- WITHDRAWALS -->
+  <!-- =========================
+       WITHDRAWALS
+  ========================= -->
+
   <div class="panel">
 
     <h2>💸 WITHDRAW REQUESTS</h2>
 
     <div id="withdrawList">
-      <div class="empty">Loading withdrawals...</div>
+      <div class="empty loading">
+        Login to load withdrawals...
+      </div>
     </div>
 
   </div>
 
 
-  <!-- USERS -->
+  <!-- =========================
+       USERS
+  ========================= -->
+
   <div class="panel">
 
     <h2>👥 USERS</h2>
 
     <div id="userList">
-      <div class="empty">Loading users...</div>
+      <div class="empty loading">
+        Login to load users...
+      </div>
     </div>
 
   </div>
@@ -345,6 +419,10 @@ button{
 
 
 <script type="module">
+
+/* =====================================================
+   FIREBASE IMPORTS
+===================================================== */
 
 import {
   initializeApp
@@ -366,189 +444,326 @@ import {
   updateDoc,
   increment,
   writeBatch,
-  query,
-  orderBy
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
-/* =========================
+/* =====================================================
    FIREBASE CONFIG
-========================= */
+===================================================== */
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD-uhTjZklnHdeOXMyR_gRiAWXyqIwAuFk",
-  authDomain: "earn-app-8f00d.firebaseapp.com",
-  projectId: "earn-app-8f00d",
-  storageBucket: "earn-app-8f00d.firebasestorage.app",
-  messagingSenderId: "864949482951",
-  appId: "1:864949482951:web:1ce6dd7fe2b911ecea55e2",
-  measurementId: "G-MBV2HQ0H49"
+
+  apiKey:
+    "AIzaSyD-uhTjZklnHdeOXMyR_gRiAWXyqIwAuFk",
+
+  authDomain:
+    "earn-app-8f00d.firebaseapp.com",
+
+  projectId:
+    "earn-app-8f00d",
+
+  storageBucket:
+    "earn-app-8f00d.firebasestorage.app",
+
+  messagingSenderId:
+    "864949482951",
+
+  appId:
+    "1:864949482951:web:1ce6dd7fe2b911ecea55e2",
+
+  measurementId:
+    "G-MBV2HQ0H49"
 };
 
-const app = initializeApp(firebaseConfig);
 
-const auth = getAuth(app);
+/* =====================================================
+   INITIALIZE FIREBASE
+===================================================== */
 
-const db = getFirestore(app);
+const app =
+  initializeApp(firebaseConfig);
+
+const auth =
+  getAuth(app);
+
+const db =
+  getFirestore(app);
 
 
-/* =========================
-   ADMIN
-========================= */
+/* =====================================================
+   ADMIN EMAIL
+===================================================== */
 
-const ADMIN_EMAIL = "ka231358@gmail.com";
+const ADMIN_EMAIL =
+  "bharamshills76@gmail.com";
 
 
-/* =========================
+/* =====================================================
    TOAST
-========================= */
+===================================================== */
 
 function toast(message){
 
-  const box = document.getElementById("toast");
+  const box =
+    document.getElementById("toast");
 
-  box.innerText = message;
+  box.innerText =
+    message;
 
-  box.style.display = "block";
+  box.style.display =
+    "block";
 
   setTimeout(()=>{
-    box.style.display = "none";
-  },3000);
+
+    box.style.display =
+      "none";
+
+  },3500);
 }
 
 
-/* =========================
-   FIELD HELPERS
-   Supports OLD + NEW
-========================= */
+/* =====================================================
+   HTML ESCAPE
+===================================================== */
 
-function getEmail(item){
-  return item.Email || item.email || "";
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 }
 
-function getAmount(item){
+
+/* =====================================================
+   GET EMAIL
+===================================================== */
+
+function getEmail(data){
+
+  return (
+    data.Email ??
+    data.email ??
+    data.userEmail ??
+    ""
+  );
+}
+
+
+/* =====================================================
+   GET AMOUNT
+===================================================== */
+
+function getAmount(data){
 
   const value =
-    item.Amount ??
-    item.amount ??
-    item.Coin ??
-    item.coin ??
+
+    data.Amount ??
+    data.amount ??
+    data.Coin ??
+    data.coin ??
     0;
 
   return Number(value) || 0;
 }
 
-function getUID(item){
+
+/* =====================================================
+   GET UID
+   Supports uid / Uid / UID / userId
+===================================================== */
+
+function getUID(data){
 
   return (
-    item.uid ||
-    item.userId ||
-    item.UID ||
+
+    data.uid ??
+    data.Uid ??
+    data.UID ??
+    data.userId ??
+    data.userUID ??
     ""
+
   );
 }
 
-function getTransactionID(item){
+
+/* =====================================================
+   GET NUMBER
+===================================================== */
+
+function getNumber(data){
 
   return (
-    item.TransactionID ||
-    item.transactionId ||
-    item.transactionID ||
+
+    data.Num ??
+    data.num ??
+    data.Number ??
+    data.number ??
+    data.receiverNumber ??
+    data.jazzCashNumber ??
+    data.easypaisaNumber ??
     ""
+
   );
 }
 
-function getNumber(item){
+
+/* =====================================================
+   GET METHOD
+===================================================== */
+
+function getMethod(data){
 
   return (
-    item.Num ||
-    item.number ||
-    item.receiverNumber ||
-    ""
-  );
-}
 
-function getMethod(item){
-
-  return (
-    item.Method ||
-    item.method ||
+    data.Method ??
+    data.method ??
+    data.paymentMethod ??
     "JazzCash / EasyPaisa"
+
   );
 }
 
-function getStatus(item){
+
+/* =====================================================
+   GET TRANSACTION ID
+===================================================== */
+
+function getTransactionID(data){
+
+  return (
+
+    data.TransactionID ??
+    data.transactionID ??
+    data.transactionId ??
+    data.TID ??
+    data.tid ??
+    ""
+
+  );
+}
+
+
+/* =====================================================
+   GET STATUS
+===================================================== */
+
+function getStatus(data){
 
   return String(
-    item.Status ||
-    item.status ||
+
+    data.Status ??
+    data.status ??
     "Pending"
+
   );
 }
 
 
-/* =========================
-   DATE
-========================= */
+/* =====================================================
+   GET DATE
+===================================================== */
 
-function getDate(item){
+function getDate(data){
 
   const value =
-    item.CreatedAt ||
-    item.createdAt ||
-    item.approvedAt ||
-    item.rejectedAt;
 
-  if(!value) return "-";
+    data.CreatedAt ??
+    data.createdAt ??
+    data.created_at ??
+    data.approvedAt ??
+    data.rejectedAt ??
+    data.paidAt;
+
+  if(!value){
+
+    return "-";
+  }
 
   try{
 
-    if(value.toDate){
-      return value.toDate().toLocaleString();
+    if(
+      typeof value.toDate ===
+      "function"
+    ){
+
+      return value
+        .toDate()
+        .toLocaleString();
+
     }
 
     if(value.seconds){
+
       return new Date(
         value.seconds * 1000
       ).toLocaleString();
+
     }
 
-    return new Date(value).toLocaleString();
+    return new Date(
+      value
+    ).toLocaleString();
 
-  }catch(e){
+  }catch(error){
 
     return "-";
   }
 }
 
 
-/* =========================
-   LOGIN
-========================= */
+/* =====================================================
+   ADMIN LOGIN
+===================================================== */
 
-window.adminLogin = async function(){
+window.adminLogin =
+async function(){
 
   const email =
-    document.getElementById("adminEmail").value.trim();
+    document
+      .getElementById("adminEmail")
+      .value
+      .trim();
 
   const password =
-    document.getElementById("adminPassword").value;
+    document
+      .getElementById("adminPassword")
+      .value;
+
 
   if(!email || !password){
 
-    toast("Email aur password enter karein");
+    toast(
+      "Email aur password enter karein"
+    );
 
     return;
   }
 
-  if(email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()){
 
-    toast("Admin email allowed nahi hai");
+  /* ADMIN EMAIL CHECK */
+
+  if(
+    email.toLowerCase() !==
+    ADMIN_EMAIL.toLowerCase()
+  ){
+
+    toast(
+      "Sirf admin email allowed hai"
+    );
 
     return;
   }
+
 
   try{
+
+    toast("Login ho raha hai...");
+
 
     await signInWithEmailAndPassword(
       auth,
@@ -556,302 +771,510 @@ window.adminLogin = async function(){
       password
     );
 
+
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "LOGIN ERROR:",
+      error
+    );
 
     toast(
       "Login failed: " +
-      (error.code || error.message)
+      (
+        error.code ||
+        error.message
+      )
     );
+
   }
+
 };
 
 
-/* =========================
+/* =====================================================
    AUTH STATE
-========================= */
+===================================================== */
 
-onAuthStateChanged(auth, async(user)=>{
+onAuthStateChanged(
+  auth,
+  async(user)=>{
 
-  if(user && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()){
+    console.log(
+      "AUTH USER:",
+      user
+    );
 
-    document
-      .getElementById("loginBox")
-      .classList.add("hidden");
 
-    document
-      .getElementById("adminPanel")
-      .classList.remove("hidden");
+    if(
 
-    await loadAll();
+      user &&
 
-  }else{
+      user.email &&
 
-    if(user){
+      user.email.toLowerCase() ===
+      ADMIN_EMAIL.toLowerCase()
 
-      await signOut(auth);
+    ){
 
-      toast("Sirf admin account allowed hai");
+      document
+        .getElementById("loginBox")
+        .classList
+        .add("hidden");
+
+
+      document
+        .getElementById("adminPanel")
+        .classList
+        .remove("hidden");
+
+
+      toast(
+        "Admin login successful"
+      );
+
+
+      await loadAll();
+
     }
 
-    document
-      .getElementById("loginBox")
-      .classList.remove("hidden");
+    else{
 
-    document
-      .getElementById("adminPanel")
-      .classList.add("hidden");
+      if(user){
+
+        await signOut(auth);
+
+        toast(
+          "Sirf admin account allowed hai"
+        );
+
+      }
+
+
+      document
+        .getElementById("loginBox")
+        .classList
+        .remove("hidden");
+
+
+      document
+        .getElementById("adminPanel")
+        .classList
+        .add("hidden");
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+window.adminLogout =
+async function(){
+
+  try{
+
+    await signOut(auth);
+
+    toast(
+      "Logged out"
+    );
+
+  }catch(error){
+
+    toast(
+      "Logout failed"
+    );
+
   }
 
-});
-
-
-/* =========================
-   LOGOUT
-========================= */
-
-window.adminLogout = async function(){
-
-  await signOut(auth);
-
-  toast("Logged out");
 };
 
 
-/* =========================
+/* =====================================================
    LOAD ALL
-========================= */
+===================================================== */
 
-window.loadAll = async function(){
+window.loadAll =
+async function(){
 
-  await loadDeposits();
+  toast(
+    "Data loading..."
+  );
 
-  await loadWithdrawals();
 
-  await loadUsers();
+  /*
+    Teeno Firebase requests
+    ek saath load hongi.
+  */
+
+  await Promise.allSettled([
+
+    loadDeposits(),
+
+    loadWithdrawals(),
+
+    loadUsers()
+
+  ]);
+
 };
 
 
-/* =========================
-   DEPOSITS
-========================= */
+/* =====================================================
+   LOAD DEPOSITS
+===================================================== */
 
 async function loadDeposits(){
 
   const box =
-    document.getElementById("depositList");
+    document.getElementById(
+      "depositList"
+    );
+
 
   box.innerHTML =
-    '<div class="empty">Loading...</div>';
+    '<div class="empty loading">Loading deposits...</div>';
+
 
   try{
 
+    console.log(
+      "Loading depositRequests..."
+    );
+
+
     const snap =
       await getDocs(
-        collection(db,"depositRequests")
+        collection(
+          db,
+          "depositRequests"
+        )
       );
 
-    document.getElementById("depositCount").innerText =
+
+    console.log(
+      "Deposit documents:",
+      snap.size
+    );
+
+
+    document.getElementById(
+      "depositCount"
+    ).innerText =
       snap.size;
+
 
     if(snap.empty){
 
       box.innerHTML =
-        '<div class="empty">No deposit requests</div>';
+        '<div class="empty">No deposit requests found</div>';
 
       return;
     }
 
+
     const items = [];
 
-    snap.forEach(d=>{
 
-      items.push({
-        id:d.id,
-        ...d.data()
-      });
+    snap.forEach(
+      (documentSnapshot)=>{
 
-    });
+        items.push({
 
-    /* newest first */
+          id:
+            documentSnapshot.id,
+
+          ...documentSnapshot.data()
+
+        });
+
+      }
+    );
+
+
     items.reverse();
 
-    box.innerHTML = "";
 
-    items.forEach(item=>{
+    box.innerHTML =
+      "";
 
-      const amount =
-        getAmount(item);
 
-      const uid =
-        getUID(item);
+    items.forEach(
+      (item)=>{
 
-      const email =
-        getEmail(item);
+        const amount =
+          getAmount(item);
 
-      const transaction =
-        getTransactionID(item);
+        const uid =
+          getUID(item);
 
-      const number =
-        getNumber(item);
+        const email =
+          getEmail(item);
 
-      const method =
-        getMethod(item);
+        const number =
+          getNumber(item);
 
-      const status =
-        getStatus(item);
+        const method =
+          getMethod(item);
 
-      const card =
-        document.createElement("div");
+        const transaction =
+          getTransactionID(item);
 
-      card.className =
-        "card " +
-        (
-          status.toLowerCase() === "pending"
-          ? "pending"
-          : ""
+        const status =
+          getStatus(item);
+
+        const statusLower =
+          status.toLowerCase();
+
+
+        const card =
+          document.createElement(
+            "div"
+          );
+
+
+        card.className =
+          "card " +
+          (
+            statusLower ===
+            "pending"
+            ? "pending"
+            : ""
+          );
+
+
+        card.innerHTML = `
+
+          <div class="row">
+            <span class="label">
+              Amount
+            </span>
+
+            <span class="value amount">
+              Rs. ${amount}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">
+              Email
+            </span>
+
+            <span class="value">
+              ${escapeHTML(email)}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">
+              UID
+            </span>
+
+            <span class="value">
+              ${escapeHTML(uid)}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">
+              Transaction ID
+            </span>
+
+            <span class="value">
+              ${escapeHTML(transaction)}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">
+              Number
+            </span>
+
+            <span class="value">
+              ${escapeHTML(number)}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">
+              Method
+            </span>
+
+            <span class="value">
+              ${escapeHTML(method)}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">
+              Date
+            </span>
+
+            <span class="value">
+              ${escapeHTML(getDate(item))}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">
+              Status
+            </span>
+
+            <span class="value">
+              <span class="status ${escapeHTML(statusLower)}">
+                ${escapeHTML(status)}
+              </span>
+            </span>
+          </div>
+
+        `;
+
+
+        /* APPROVE + REJECT */
+
+        if(
+          statusLower ===
+          "pending"
+        ){
+
+          const actions =
+            document.createElement(
+              "div"
+            );
+
+          actions.className =
+            "actions";
+
+
+          const approve =
+            document.createElement(
+              "button"
+            );
+
+          approve.className =
+            "approve";
+
+          approve.innerText =
+            "✅ APPROVE";
+
+
+          approve.onclick =
+            function(){
+
+              approveDeposit(
+                item.id
+              );
+
+            };
+
+
+          const reject =
+            document.createElement(
+              "button"
+            );
+
+          reject.className =
+            "reject";
+
+          reject.innerText =
+            "❌ REJECT";
+
+
+          reject.onclick =
+            function(){
+
+              rejectDeposit(
+                item.id
+              );
+
+            };
+
+
+          actions.appendChild(
+            approve
+          );
+
+          actions.appendChild(
+            reject
+          );
+
+          card.appendChild(
+            actions
+          );
+
+        }
+
+
+        box.appendChild(
+          card
         );
 
-      card.innerHTML = `
-
-        <div class="row">
-          <span class="label">Amount</span>
-          <span class="value amount">
-            Rs. ${amount}
-          </span>
-        </div>
-
-        <div class="row">
-          <span class="label">Email</span>
-          <span class="value">
-            ${escapeHTML(email)}
-          </span>
-        </div>
-
-        <div class="row">
-          <span class="label">UID</span>
-          <span class="value">
-            ${escapeHTML(uid)}
-          </span>
-        </div>
-
-        <div class="row">
-          <span class="label">Transaction ID</span>
-          <span class="value">
-            ${escapeHTML(transaction)}
-          </span>
-        </div>
-
-        <div class="row">
-          <span class="label">Number</span>
-          <span class="value">
-            ${escapeHTML(number)}
-          </span>
-        </div>
-
-        <div class="row">
-          <span class="label">Method</span>
-          <span class="value">
-            ${escapeHTML(method)}
-          </span>
-        </div>
-
-        <div class="row">
-          <span class="label">Date</span>
-          <span class="value">
-            ${getDate(item)}
-          </span>
-        </div>
-
-        <div class="row">
-          <span class="label">Status</span>
-          <span class="value">
-            <span class="status ${status.toLowerCase()}">
-              ${escapeHTML(status)}
-            </span>
-          </span>
-        </div>
-
-      `;
-
-      if(
-        status.toLowerCase() === "pending"
-      ){
-
-        const actions =
-          document.createElement("div");
-
-        actions.className =
-          "actions";
-
-        const approve =
-          document.createElement("button");
-
-        approve.className =
-          "approve";
-
-        approve.innerText =
-          "✅ APPROVE";
-
-        approve.onclick =
-          ()=>approveDeposit(item.id);
-
-
-        const reject =
-          document.createElement("button");
-
-        reject.className =
-          "reject";
-
-        reject.innerText =
-          "❌ REJECT";
-
-        reject.onclick =
-          ()=>rejectDeposit(item.id);
-
-
-        actions.appendChild(approve);
-
-        actions.appendChild(reject);
-
-        card.appendChild(actions);
       }
+    );
 
-      box.appendChild(card);
-
-    });
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "DEPOSIT LOAD ERROR:",
+      error
+    );
 
-    box.innerHTML =
-      '<div class="empty">Error loading deposits</div>';
 
-    toast("Deposits load nahi huay");
+    box.innerHTML = `
+      <div class="empty">
+        ❌ Error loading deposits<br><br>
+        ${escapeHTML(
+          error.code ||
+          error.message
+        )}
+      </div>
+    `;
+
+
+    toast(
+      "Deposits error: " +
+      (
+        error.code ||
+        error.message
+      )
+    );
+
   }
+
 }
 
 
-/* =========================
+/* =====================================================
    APPROVE DEPOSIT
-========================= */
+===================================================== */
 
-async function approveDeposit(requestId){
+async function approveDeposit(
+  requestId
+){
 
-  if(!confirm(
-    "Is deposit ko APPROVE karna hai?"
-  )){
+  const ok =
+    confirm(
+      "Is deposit ko approve karna hai?"
+    );
+
+
+  if(!ok){
+
     return;
   }
 
+
   try{
 
-    /* IMPORTANT:
-       Fresh document read
-       so UID + Amount never become 0
-    */
+    toast(
+      "Deposit checking..."
+    );
+
 
     const requestRef =
       doc(
@@ -860,18 +1283,26 @@ async function approveDeposit(requestId){
         requestId
       );
 
+
     const requestSnap =
-      await getDoc(requestRef);
+      await getDoc(
+        requestRef
+      );
+
 
     if(!requestSnap.exists()){
 
-      toast("Deposit request nahi mili");
+      toast(
+        "Deposit request nahi mili"
+      );
 
       return;
     }
 
+
     const data =
       requestSnap.data();
+
 
     const uid =
       getUID(data);
@@ -882,32 +1313,21 @@ async function approveDeposit(requestId){
     const status =
       getStatus(data);
 
-    console.log(
-      "APPROVE DATA:",
-      {
-        requestId,
-        uid,
-        amount,
-        status,
-        data
-      }
-    );
-
 
     if(!uid){
 
       toast(
-        "Invalid deposit: UID missing"
+        "❌ UID missing hai"
       );
 
       return;
     }
 
 
-    if(!amount || amount <= 0){
+    if(amount <= 0){
 
       toast(
-        "Invalid deposit: Amount 0 hai"
+        "❌ Amount invalid hai"
       );
 
       return;
@@ -915,11 +1335,12 @@ async function approveDeposit(requestId){
 
 
     if(
-      status.toLowerCase() !== "pending"
+      status.toLowerCase() !==
+      "pending"
     ){
 
       toast(
-        "Ye deposit already process ho chuka hai"
+        "Ye request already processed hai"
       );
 
       return;
@@ -935,46 +1356,68 @@ async function approveDeposit(requestId){
         uid
       );
 
+
     const userSnap =
-      await getDoc(userRef);
+      await getDoc(
+        userRef
+      );
+
 
     if(!userSnap.exists()){
 
       toast(
-        "User document nahi mila"
+        "❌ User document nahi mila: " +
+        uid
       );
 
       return;
     }
 
 
-    /* ATOMIC UPDATE */
+    /* BATCH */
 
     const batch =
       writeBatch(db);
 
 
+    /*
+      BALANCE MEIN DEPOSIT
+    */
+
     batch.update(
       userRef,
       {
-        Coin: increment(amount),
+
+        Coin:
+          increment(amount),
 
         "Total earning":
           increment(amount)
+
       }
     );
 
 
+    /*
+      REQUEST APPROVED
+    */
+
     batch.update(
       requestRef,
       {
-        Status:"Approved",
 
-        status:"Approved",
+        Status:
+          "Approved",
 
-        approvedAt:new Date(),
+        status:
+          "Approved",
 
-        approvedBy:ADMIN_EMAIL
+        approvedAt:
+          serverTimestamp(),
+
+        approvedBy:
+          ADMIN_EMAIL
+
       }
     );
 
@@ -983,9 +1426,9 @@ async function approveDeposit(requestId){
 
 
     toast(
-      "Deposit approved! Rs. " +
+      "✅ Approved! Rs. " +
       amount +
-      " user balance mein add ho gaya."
+      " balance mein add ho gaya."
     );
 
 
@@ -998,271 +1441,449 @@ async function approveDeposit(requestId){
       error
     );
 
+
     toast(
-      "Approve failed: " +
-      (error.code || error.message)
+      "❌ Approve failed: " +
+      (
+        error.code ||
+        error.message
+      )
     );
+
   }
+
 }
 
 
-/* =========================
+/* =====================================================
    REJECT DEPOSIT
-========================= */
+===================================================== */
 
-async function rejectDeposit(requestId){
+async function rejectDeposit(
+  requestId
+){
 
-  if(!confirm(
-    "Is deposit ko REJECT karna hai?"
-  )){
+  const ok =
+    confirm(
+      "Is deposit ko reject karna hai?"
+    );
+
+
+  if(!ok){
+
     return;
   }
 
+
   try{
 
-    const requestRef =
+    const ref =
       doc(
         db,
         "depositRequests",
         requestId
       );
 
+
     const snap =
-      await getDoc(requestRef);
+      await getDoc(ref);
+
 
     if(!snap.exists()){
 
-      toast("Request nahi mili");
+      toast(
+        "Request nahi mili"
+      );
 
       return;
     }
+
 
     const data =
       snap.data();
 
-    const status =
-      getStatus(data);
 
     if(
-      status.toLowerCase() !== "pending"
+      getStatus(data)
+        .toLowerCase() !==
+      "pending"
     ){
 
-      toast("Already processed");
+      toast(
+        "Already processed"
+      );
 
       return;
     }
 
+
     await updateDoc(
-      requestRef,
+      ref,
       {
-        Status:"Rejected",
 
-        status:"Rejected",
+        Status:
+          "Rejected",
 
-        rejectedAt:new Date(),
+        status:
+          "Rejected",
 
-        rejectedBy:ADMIN_EMAIL
+        rejectedAt:
+          serverTimestamp(),
+
+        rejectedBy:
+          ADMIN_EMAIL
+
       }
     );
 
-    toast("Deposit rejected");
+
+    toast(
+      "❌ Deposit rejected"
+    );
+
 
     await loadDeposits();
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "REJECT ERROR:",
+      error
+    );
+
 
     toast(
       "Reject failed: " +
-      (error.code || error.message)
+      (
+        error.code ||
+        error.message
+      )
     );
+
   }
+
 }
 
 
-/* =========================
-   WITHDRAWALS
-========================= */
+/* =====================================================
+   LOAD WITHDRAWALS
+===================================================== */
 
 async function loadWithdrawals(){
 
   const box =
-    document.getElementById("withdrawList");
+    document.getElementById(
+      "withdrawList"
+    );
+
 
   box.innerHTML =
-    '<div class="empty">Loading...</div>';
+    '<div class="empty loading">Loading withdrawals...</div>';
+
 
   try{
 
     const snap =
       await getDocs(
-        collection(db,"withdrawalRequests")
+        collection(
+          db,
+          "withdrawalRequests"
+        )
       );
 
-    document.getElementById("withdrawCount").innerText =
+
+    document.getElementById(
+      "withdrawCount"
+    ).innerText =
       snap.size;
+
 
     if(snap.empty){
 
       box.innerHTML =
-        '<div class="empty">No withdrawal requests</div>';
+        '<div class="empty">No withdrawal requests found</div>';
 
       return;
     }
 
-    const items=[];
 
-    snap.forEach(d=>{
+    const items = [];
 
-      items.push({
-        id:d.id,
-        ...d.data()
-      });
 
-    });
+    snap.forEach(
+      (documentSnapshot)=>{
+
+        items.push({
+
+          id:
+            documentSnapshot.id,
+
+          ...documentSnapshot.data()
+
+        });
+
+      }
+    );
+
 
     items.reverse();
 
-    box.innerHTML="";
 
-    items.forEach(item=>{
+    box.innerHTML =
+      "";
 
-      const amount =
-        getAmount(item);
 
-      const uid =
-        getUID(item);
+    items.forEach(
+      (item)=>{
 
-      const email =
-        getEmail(item);
+        const amount =
+          getAmount(item);
 
-      const number =
-        getNumber(item);
+        const uid =
+          getUID(item);
 
-      const method =
-        getMethod(item);
+        const email =
+          getEmail(item);
 
-      const status =
-        getStatus(item);
+        const number =
+          getNumber(item);
 
-      const card =
-        document.createElement("div");
+        const method =
+          getMethod(item);
 
-      card.className="card";
+        const status =
+          getStatus(item);
 
-      card.innerHTML=`
+        const statusLower =
+          status.toLowerCase();
 
-        <div class="row">
-          <span class="label">Amount</span>
-          <span class="value amount">
-            Rs. ${amount}
-          </span>
-        </div>
 
-        <div class="row">
-          <span class="label">Email</span>
-          <span class="value">
-            ${escapeHTML(email)}
-          </span>
-        </div>
+        const card =
+          document.createElement(
+            "div"
+          );
 
-        <div class="row">
-          <span class="label">UID</span>
-          <span class="value">
-            ${escapeHTML(uid)}
-          </span>
-        </div>
 
-        <div class="row">
-          <span class="label">Number</span>
-          <span class="value">
-            ${escapeHTML(number)}
-          </span>
-        </div>
+        card.className =
+          "card " +
+          (
+            statusLower ===
+            "pending"
+            ? "pending"
+            : ""
+          );
 
-        <div class="row">
-          <span class="label">Method</span>
-          <span class="value">
-            ${escapeHTML(method)}
-          </span>
-        </div>
 
-        <div class="row">
-          <span class="label">Status</span>
-          <span class="value">
-            <span class="status ${status.toLowerCase()}">
-              ${escapeHTML(status)}
+        card.innerHTML = `
+
+          <div class="row">
+            <span class="label">
+              Amount
             </span>
-          </span>
-        </div>
 
-      `;
+            <span class="value amount">
+              Rs. ${amount}
+            </span>
+          </div>
 
-      if(
-        status.toLowerCase()==="pending"
-      ){
+          <div class="row">
+            <span class="label">
+              Email
+            </span>
 
-        const actions =
-          document.createElement("div");
+            <span class="value">
+              ${escapeHTML(email)}
+            </span>
+          </div>
 
-        actions.className="actions";
+          <div class="row">
+            <span class="label">
+              UID
+            </span>
+
+            <span class="value">
+              ${escapeHTML(uid)}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">
+              Number
+            </span>
+
+            <span class="value">
+              ${escapeHTML(number)}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">
+              Method
+            </span>
+
+            <span class="value">
+              ${escapeHTML(method)}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">
+              Date
+            </span>
+
+            <span class="value">
+              ${escapeHTML(getDate(item))}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">
+              Status
+            </span>
+
+            <span class="value">
+              <span class="status ${escapeHTML(statusLower)}">
+                ${escapeHTML(status)}
+              </span>
+            </span>
+          </div>
+
+        `;
 
 
-        const approve =
-          document.createElement("button");
+        if(
+          statusLower ===
+          "pending"
+        ){
 
-        approve.className="approve";
+          const actions =
+            document.createElement(
+              "div"
+            );
 
-        approve.innerText="✅ MARK PAID";
-
-        approve.onclick =
-          ()=>approveWithdrawal(item.id);
-
-
-        const reject =
-          document.createElement("button");
-
-        reject.className="reject";
-
-        reject.innerText="❌ REJECT";
-
-        reject.onclick =
-          ()=>rejectWithdrawal(item.id);
+          actions.className =
+            "actions";
 
 
-        actions.appendChild(approve);
+          const paid =
+            document.createElement(
+              "button"
+            );
 
-        actions.appendChild(reject);
+          paid.className =
+            "approve";
 
-        card.appendChild(actions);
+          paid.innerText =
+            "✅ MARK PAID";
+
+
+          paid.onclick =
+            function(){
+
+              approveWithdrawal(
+                item.id
+              );
+
+            };
+
+
+          const reject =
+            document.createElement(
+              "button"
+            );
+
+          reject.className =
+            "reject";
+
+          reject.innerText =
+            "❌ REJECT";
+
+
+          reject.onclick =
+            function(){
+
+              rejectWithdrawal(
+                item.id
+              );
+
+            };
+
+
+          actions.appendChild(
+            paid
+          );
+
+          actions.appendChild(
+            reject
+          );
+
+
+          card.appendChild(
+            actions
+          );
+
+        }
+
+
+        box.appendChild(
+          card
+        );
+
       }
+    );
 
-      box.appendChild(card);
-
-    });
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "WITHDRAW LOAD ERROR:",
+      error
+    );
 
-    box.innerHTML =
-      '<div class="empty">Error loading withdrawals</div>';
+
+    box.innerHTML = `
+      <div class="empty">
+        ❌ Error loading withdrawals<br><br>
+        ${escapeHTML(
+          error.code ||
+          error.message
+        )}
+      </div>
+    `;
+
+
+    toast(
+      "Withdrawals error: " +
+      (
+        error.code ||
+        error.message
+      )
+    );
+
   }
+
 }
 
 
-/* =========================
-   APPROVE WITHDRAWAL
-========================= */
+/* =====================================================
+   MARK WITHDRAWAL PAID
+===================================================== */
 
-async function approveWithdrawal(id){
+async function approveWithdrawal(
+  requestId
+){
 
-  if(!confirm(
-    "Withdrawal ko MARK PAID karna hai?"
-  )){
+  const ok =
+    confirm(
+      "Withdrawal ko MARK PAID karna hai?"
+    );
+
+
+  if(!ok){
+
     return;
   }
+
 
   try{
 
@@ -1270,72 +1891,109 @@ async function approveWithdrawal(id){
       doc(
         db,
         "withdrawalRequests",
-        id
+        requestId
       );
+
 
     const snap =
       await getDoc(ref);
 
+
     if(!snap.exists()){
 
-      toast("Withdrawal nahi mili");
+      toast(
+        "Withdrawal request nahi mili"
+      );
 
       return;
     }
+
 
     const data =
       snap.data();
 
+
     if(
-      getStatus(data).toLowerCase() !==
+      getStatus(data)
+        .toLowerCase() !==
       "pending"
     ){
 
-      toast("Already processed");
+      toast(
+        "Already processed"
+      );
 
       return;
     }
 
+
     await updateDoc(
       ref,
       {
-        Status:"Paid",
 
-        status:"Paid",
+        Status:
+          "Paid",
 
-        paidAt:new Date(),
+        status:
+          "Paid",
 
-        paidBy:ADMIN_EMAIL
+        paidAt:
+          serverTimestamp(),
+
+        paidBy:
+          ADMIN_EMAIL
+
       }
     );
 
-    toast("Withdrawal marked as paid");
+
+    toast(
+      "✅ Withdrawal marked as PAID"
+    );
+
 
     await loadWithdrawals();
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "WITHDRAW ERROR:",
+      error
+    );
+
 
     toast(
-      "Failed: " +
-      (error.code || error.message)
+      "Payment update failed: " +
+      (
+        error.code ||
+        error.message
+      )
     );
+
   }
+
 }
 
 
-/* =========================
+/* =====================================================
    REJECT WITHDRAWAL
-========================= */
+===================================================== */
 
-async function rejectWithdrawal(id){
+async function rejectWithdrawal(
+  requestId
+){
 
-  if(!confirm(
-    "Withdrawal reject karna hai?"
-  )){
+  const ok =
+    confirm(
+      "Withdrawal reject karna hai?"
+    );
+
+
+  if(!ok){
+
     return;
   }
+
 
   try{
 
@@ -1343,59 +2001,122 @@ async function rejectWithdrawal(id){
       doc(
         db,
         "withdrawalRequests",
-        id
+        requestId
       );
+
+
+    const snap =
+      await getDoc(ref);
+
+
+    if(!snap.exists()){
+
+      toast(
+        "Withdrawal nahi mili"
+      );
+
+      return;
+    }
+
+
+    const data =
+      snap.data();
+
+
+    if(
+      getStatus(data)
+        .toLowerCase() !==
+      "pending"
+    ){
+
+      toast(
+        "Already processed"
+      );
+
+      return;
+    }
+
 
     await updateDoc(
       ref,
       {
-        Status:"Rejected",
 
-        status:"Rejected",
+        Status:
+          "Rejected",
 
-        rejectedAt:new Date(),
+        status:
+          "Rejected",
 
-        rejectedBy:ADMIN_EMAIL
+        rejectedAt:
+          serverTimestamp(),
+
+        rejectedBy:
+          ADMIN_EMAIL
+
       }
     );
 
-    toast("Withdrawal rejected");
+
+    toast(
+      "❌ Withdrawal rejected"
+    );
+
 
     await loadWithdrawals();
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "WITHDRAW REJECT ERROR:",
+      error
+    );
+
 
     toast(
-      "Failed: " +
-      (error.code || error.message)
+      "Reject failed: " +
+      (
+        error.code ||
+        error.message
+      )
     );
+
   }
+
 }
 
 
-/* =========================
-   USERS
-========================= */
+/* =====================================================
+   LOAD USERS
+===================================================== */
 
 async function loadUsers(){
 
   const box =
-    document.getElementById("userList");
+    document.getElementById(
+      "userList"
+    );
+
 
   box.innerHTML =
-    '<div class="empty">Loading...</div>';
+    '<div class="empty loading">Loading users...</div>';
+
 
   try{
 
     const snap =
       await getDocs(
-        collection(db,"user")
+        collection(
+          db,
+          "user"
+        )
       );
 
-    document.getElementById("userCount").innerText =
+
+    document.getElementById(
+      "userCount"
+    ).innerText =
       snap.size;
+
 
     if(snap.empty){
 
@@ -1405,128 +2126,175 @@ async function loadUsers(){
       return;
     }
 
-    box.innerHTML="";
 
-    snap.forEach(d=>{
+    box.innerHTML =
+      "";
 
-      const data =
-        d.data();
 
-      const email =
-        data.Email ||
-        data.email ||
-        "No email";
+    snap.forEach(
+      (documentSnapshot)=>{
 
-      const coin =
-        Number(
-          data.Coin ||
-          data.coin ||
-          0
+        const data =
+          documentSnapshot.data();
+
+
+        const email =
+          getEmail(data) ||
+          "No email";
+
+
+        const coin =
+          Number(
+            data.Coin ??
+            data.coin ??
+            0
+          );
+
+
+        const hens =
+          Number(
+            data.hens ??
+            data.Hens ??
+            0
+          );
+
+
+        const eggs =
+          Number(
+            data.eggs ??
+            data.Eggs ??
+            0
+          );
+
+
+        const total =
+          Number(
+
+            data["Total earning"] ??
+            data.totalEarned ??
+            data.totalEarning ??
+            0
+
+          );
+
+
+        const card =
+          document.createElement(
+            "div"
+          );
+
+
+        card.className =
+          "card";
+
+
+        card.innerHTML = `
+
+          <div class="row">
+            <span class="label">
+              Email
+            </span>
+
+            <span class="value">
+              ${escapeHTML(email)}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">
+              UID
+            </span>
+
+            <span class="value">
+              ${escapeHTML(
+                documentSnapshot.id
+              )}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">
+              Balance
+            </span>
+
+            <span class="value amount">
+              Rs. ${coin}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">
+              Hens
+            </span>
+
+            <span class="value">
+              ${hens}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">
+              Eggs
+            </span>
+
+            <span class="value">
+              ${eggs}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="label">
+              Total Earning
+            </span>
+
+            <span class="value">
+              Rs. ${total}
+            </span>
+          </div>
+
+        `;
+
+
+        box.appendChild(
+          card
         );
 
-      const hens =
-        Number(
-          data.hens ||
-          data.Hens ||
-          0
-        );
+      }
+    );
 
-      const eggs =
-        Number(
-          data.eggs ||
-          data.Eggs ||
-          0
-        );
-
-      const total =
-        Number(
-          data["Total earning"] ||
-          data.totalEarned ||
-          0
-        );
-
-
-      const card =
-        document.createElement("div");
-
-      card.className="card";
-
-      card.innerHTML=`
-
-        <div class="row">
-          <span class="label">Email</span>
-          <span class="value">
-            ${escapeHTML(email)}
-          </span>
-        </div>
-
-        <div class="row">
-          <span class="label">UID</span>
-          <span class="value">
-            ${escapeHTML(d.id)}
-          </span>
-        </div>
-
-        <div class="row">
-          <span class="label">Balance</span>
-          <span class="value amount">
-            Rs. ${coin}
-          </span>
-        </div>
-
-        <div class="row">
-          <span class="label">Hens</span>
-          <span class="value">
-            ${hens}
-          </span>
-        </div>
-
-        <div class="row">
-          <span class="label">Eggs</span>
-          <span class="value">
-            ${eggs}
-          </span>
-        </div>
-
-        <div class="row">
-          <span class="label">Total Earning</span>
-          <span class="value">
-            Rs. ${total}
-          </span>
-        </div>
-
-      `;
-
-      box.appendChild(card);
-
-    });
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "USER LOAD ERROR:",
+      error
+    );
 
-    box.innerHTML =
-      '<div class="empty">Error loading users</div>';
+
+    box.innerHTML = `
+      <div class="empty">
+        ❌ Error loading users<br><br>
+        ${escapeHTML(
+          error.code ||
+          error.message
+        )}
+      </div>
+    `;
+
+
+    toast(
+      "Users error: " +
+      (
+        error.code ||
+        error.message
+      )
+    );
+
   }
-}
 
-
-/* =========================
-   HTML SECURITY
-========================= */
-
-function escapeHTML(value){
-
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
 }
 
 </script>
 
 </body>
 </html>
-```
